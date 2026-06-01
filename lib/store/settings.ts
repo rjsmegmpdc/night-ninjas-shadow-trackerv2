@@ -21,6 +21,13 @@ const KEY = {
   USER_TIMEZONE: 'user.timezone',
   STREAK_RUN_EVERYDAY: 'streak.run_everyday',
   FIRST_DAY_OF_WEEK: 'prefs.firstDayOfWeek',
+  // Phase 3b plumbing - read by 3b's interpretState/applyAdjustment
+  COACH_MODE: 'prefs.coachMode',
+  // R1.5 plumbing - club schedule sharing
+  CLUB_PARKRUN_ID: 'club.parkrun_id',
+  CLUB_TERMS_ACCEPTED_AT: 'club.terms_accepted_at',
+  CLUB_WINDOW_DEFAULT: 'club.window_default',
+  CLUB_LAST_SHARE_GENERATED_AT: 'club.last_share_generated_at',
 } as const;
 
 async function get(key: string): Promise<string | null> {
@@ -134,4 +141,74 @@ export async function getFirstDayOfWeek(): Promise<FirstDayOfWeek> {
 
 export async function setFirstDayOfWeek(value: FirstDayOfWeek): Promise<void> {
   await set(KEY.FIRST_DAY_OF_WEEK, value);
+}
+
+/* ============================================================================
+ * Coach mode (Phase 3b plumbing - data only, no behaviour yet)
+ *
+ * Three positions:
+ *   - 'manual'    - engine surfaces insights only; user manually edits
+ *   - 'assisted'  - engine proposes adjustments; user accepts or dismisses
+ *   - 'automatic' - engine applies adjustments and notifies the user
+ *
+ * Default 'assisted'. Setting persisted but not yet read by any engine -
+ * Phase 3b commences using this when interpretState/applyAdjustment land.
+ * ========================================================================== */
+
+export type CoachMode = 'manual' | 'assisted' | 'automatic';
+
+export async function getCoachMode(): Promise<CoachMode> {
+  const v = await get(KEY.COACH_MODE);
+  if (v === 'manual' || v === 'automatic') return v;
+  return 'assisted';
+}
+
+export async function setCoachMode(value: CoachMode): Promise<void> {
+  await set(KEY.COACH_MODE, value);
+}
+
+/* ============================================================================
+ * Club schedule sharing (R1.5 plumbing - data only)
+ *
+ * Settings persisted now so R1.5's UI lands without a schema migration.
+ * The actual generator + Settings card commence in R1.5.
+ * ========================================================================== */
+
+export async function getClubParkrunId(): Promise<string | null> {
+  return await get(KEY.CLUB_PARKRUN_ID);
+}
+
+export async function setClubParkrunId(value: string | null): Promise<void> {
+  if (value === null) await set(KEY.CLUB_PARKRUN_ID, '');
+  else await set(KEY.CLUB_PARKRUN_ID, value);
+}
+
+export async function getClubTermsAcceptedAt(): Promise<string | null> {
+  const v = await get(KEY.CLUB_TERMS_ACCEPTED_AT);
+  return v === '' ? null : v;
+}
+
+export async function setClubTermsAcceptedAt(iso: string): Promise<void> {
+  await set(KEY.CLUB_TERMS_ACCEPTED_AT, iso);
+}
+
+export type ClubWindowDefault = '1w' | '2w' | '4w' | 'next-race' | 'program-end';
+
+export async function getClubWindowDefault(): Promise<ClubWindowDefault> {
+  const v = await get(KEY.CLUB_WINDOW_DEFAULT);
+  if (v === '1w' || v === '4w' || v === 'next-race' || v === 'program-end') return v;
+  return '2w';
+}
+
+export async function setClubWindowDefault(value: ClubWindowDefault): Promise<void> {
+  await set(KEY.CLUB_WINDOW_DEFAULT, value);
+}
+
+export async function getClubLastShareGeneratedAt(): Promise<string | null> {
+  const v = await get(KEY.CLUB_LAST_SHARE_GENERATED_AT);
+  return v === '' ? null : v;
+}
+
+export async function setClubLastShareGeneratedAt(iso: string): Promise<void> {
+  await set(KEY.CLUB_LAST_SHARE_GENERATED_AT, iso);
 }

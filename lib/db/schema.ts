@@ -491,3 +491,61 @@ export const planPeriods = sqliteTable(
 
 export type PlanPeriod = typeof planPeriods.$inferSelect;
 export type NewPlanPeriod = typeof planPeriods.$inferInsert;
+
+/* ============================================================================
+ * Plan adjustments (Phase 3b plumbing - empty until 3b commences)
+ *
+ * Audit trail of every engine-suggested adjustment to a week's prescription.
+ * Each row captures:
+ *   - When the proposal was made
+ *   - Whether it was applied or dismissed (and when)
+ *   - What triggered it (TSB-low, ACWR-high, ...)
+ *   - Human-readable rationale
+ *   - JSON snapshots of before/after state
+ *   - The coach mode active at proposal time
+ *
+ * Logged regardless of mode:
+ *   - manual mode: row with applied_at=NULL, dismissed_at=NULL until user acts
+ *   - assisted mode: same, awaiting user accept/dismiss
+ *   - automatic mode: row with applied_at set immediately
+ *
+ * Override-frequency analysis (deferred to v2) consumes this table.
+ * ========================================================================== */
+
+export const planAdjustments = sqliteTable(
+  'plan_adjustments',
+  {
+    id: integer('id').primaryKey({ autoIncrement: true }),
+
+    proposedAt: text('proposed_at').notNull().default(sql`CURRENT_TIMESTAMP`),
+    appliedAt: text('applied_at'),       // null until applied
+    dismissedAt: text('dismissed_at'),   // null until dismissed
+
+    // Trigger codes (stable strings):
+    //   tsb-low | acwr-high | monotony-high | sickness-window |
+    //   travel-window | injury-logged | manual-request
+    trigger: text('trigger').notNull(),
+
+    rationale: text('rationale').notNull(),
+
+    // JSON snapshots of athlete state + week template before/after.
+    // Stored as text so we don't have to design a full schema yet -
+    // 3b sets the structure when it commences.
+    beforeState: text('before_state'),
+    afterState: text('after_state'),
+
+    // The coach mode in effect when this row was created.
+    // Useful for analysis (which mode produces more dismissals).
+    mode: text('mode').notNull(),
+
+    // Optional: which week this affected, anchored to its Monday.
+    weekStartIso: text('week_start_iso'),
+  },
+  (t) => ({
+    proposedAtIdx: index('idx_plan_adjustments_proposed_at').on(t.proposedAt),
+    triggerIdx: index('idx_plan_adjustments_trigger').on(t.trigger),
+  })
+);
+
+export type PlanAdjustment = typeof planAdjustments.$inferSelect;
+export type NewPlanAdjustment = typeof planAdjustments.$inferInsert;

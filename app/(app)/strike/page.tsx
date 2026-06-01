@@ -43,11 +43,11 @@ export default async function StrikePage() {
   ]);
 
   return (
-    <div className="px-12 py-10 max-w-7xl mx-auto space-y-8">
+    <div className="px-4 sm:px-8 lg:px-12 py-10 max-w-7xl mx-auto space-y-8">
       <header className="border-b border-ink-line pb-6 space-y-1">
-        <span className="nn-caps">strike - athlete state</span>
+        <span className="nn-caps">analytics - athlete state</span>
         <h1 className="font-display tracking-wide-display text-5xl uppercase">
-          Strike
+          Athlete State
         </h1>
         <div className="font-mono text-bone-dim text-sm max-w-2xl">
           Where you actually are. Fitness, fatigue, form - and how your
@@ -73,7 +73,7 @@ export default async function StrikePage() {
           </div>
           <div className="grid grid-cols-3 gap-6">
             <div>
-              <div className="font-mono text-[10px] uppercase tracking-widest text-bone-mute">
+              <div className="font-mono text-xs uppercase tracking-widest text-bone-mute">
                 long run
               </div>
               <div className="font-display text-3xl text-bone tabular-nums leading-none">
@@ -82,7 +82,7 @@ export default async function StrikePage() {
               </div>
             </div>
             <div>
-              <div className="font-mono text-[10px] uppercase tracking-widest text-bone-mute">
+              <div className="font-mono text-xs uppercase tracking-widest text-bone-mute">
                 of weekly total
               </div>
               <div className="font-display text-3xl text-bone tabular-nums leading-none">
@@ -91,7 +91,7 @@ export default async function StrikePage() {
               </div>
             </div>
             <div>
-              <div className="font-mono text-[10px] uppercase tracking-widest text-bone-mute">
+              <div className="font-mono text-xs uppercase tracking-widest text-bone-mute">
                 vs 2 weeks ago
               </div>
               <div className="font-display text-3xl text-bone tabular-nums leading-none">
@@ -101,7 +101,7 @@ export default async function StrikePage() {
               </div>
             </div>
           </div>
-          <div className="border-t border-ink-line pt-3 font-mono text-[11px] leading-relaxed text-bone-dim">
+          <div className="border-t border-ink-line pt-3 font-mono text-xs leading-relaxed text-bone-dim">
             {longRunCheck.message}
           </div>
         </div>

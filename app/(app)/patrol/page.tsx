@@ -54,7 +54,7 @@ export default async function PatrolPage() {
   const hasData = activityCount > 0;
 
   return (
-    <div className="px-12 py-10 max-w-7xl mx-auto space-y-10">
+    <div className="px-4 sm:px-8 lg:px-12 py-10 max-w-7xl mx-auto space-y-10">
       <SyncStatusBanner />
 
       {!hasData && (
@@ -167,7 +167,7 @@ async function PatrolDashboard() {
       <header className="space-y-4 border-b border-ink-line pb-5">
         <div className="flex items-start justify-between gap-4">
           <div className="space-y-1">
-            <span className="nn-caps">this week's patrol</span>
+            <span className="nn-caps">dashboard - this week</span>
             <h1 className="font-display tracking-wide-display text-4xl uppercase leading-none">
               {programPhase.kind === 'pre-program' ? (
                 <>
@@ -226,7 +226,7 @@ async function PatrolDashboard() {
               <span
                 key={i}
                 className={
-                  'inline-flex items-center gap-1.5 px-2 py-1 border text-[10px] font-mono uppercase tracking-widest ' +
+                  'inline-flex items-center gap-1.5 px-2 py-1 border text-xs font-mono uppercase tracking-widest ' +
                   adaptationStyle(a.kind)
                 }
                 title={a.detail}
@@ -457,7 +457,7 @@ function ComplianceRow({ dow, sess }: { dow: number; sess: SessionCompliance }) 
   }[sess.flag];
 
   return (
-    <div className="py-3 grid grid-cols-[60px_1fr_120px_80px_28px] gap-4 items-center">
+    <div className="py-3 grid grid-cols-[48px_1fr_24px] sm:grid-cols-[60px_1fr_120px_80px_28px] gap-4 items-center">
       <span className="font-display tracking-wide-display uppercase text-bone-dim text-sm">
         {DOW_LABELS[dow]}
       </span>
@@ -467,10 +467,10 @@ function ComplianceRow({ dow, sess }: { dow: number; sess: SessionCompliance }) 
           {sess.message}
         </div>
       </div>
-      <span className="font-mono tabular-nums text-bone">
+      <span className="hidden sm:block font-mono tabular-nums text-bone">
         {sess.actualKm != null ? `${sess.actualKm.toFixed(1)} km` : '—'}
       </span>
-      <span className="font-mono tabular-nums text-bone-dim text-sm">
+      <span className="hidden sm:block font-mono tabular-nums text-bone-dim text-sm">
         {sess.actualPaceSpk ? `${formatSpk(sess.actualPaceSpk)}/km` : '—'}
       </span>
       <FlagIcon size={18} strokeWidth={1.5} className={flagColor} />

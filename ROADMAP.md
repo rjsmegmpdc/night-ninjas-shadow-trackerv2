@@ -9,16 +9,23 @@
 
 ## Product vision
 
-Night Ninjas is an intelligent training app for serious distance runners.
-Local-first. Owns its data. Built around a real coach's mental model —
-not a logging tool, not a social feed, not a one-shot plan generator.
+VELOCITY is an intelligent marathon training console for serious distance
+runners. Local-first. Owns its data. Built around a real coach's mental
+model - not a logging tool, not a social feed, not a one-shot plan
+generator.
+
+> **Rebrand note:** the product was originally *Night Ninjas Shadow
+> Tracker*. As of bundle 8074e01+, the user-facing brand is **VELOCITY**.
+> The codebase folder, `package.json` name, GitHub repo, and `%APPDATA%`
+> data path retain the original name. All UI surfaces show VELOCITY.
+> See `BRAND.md` and `DESIGN.md` for the new specs.
 
 The product answers, every day, four questions:
 
-1. **What am I doing today, and why?** — plan + context
-2. **How am I tracking against the plan?** — compliance + execution
-3. **How is my body, and what's that mean for what I should do next?** — freshness + state
-4. **What's coming, and how do I prepare for it?** — countdown + race-execution
+1. **What am I doing today, and why?** - plan + context
+2. **How am I tracking against the plan?** - compliance + execution
+3. **How is my body, and what's that mean for what I should do next?** - freshness + state
+4. **What's coming, and how do I prepare for it?** - countdown + race-execution
 
 Everything we build serves one of those four questions. If a feature
 doesn't, it doesn't ship.
@@ -27,12 +34,25 @@ doesn't, it doesn't ship.
 
 ## Current focus
 
-**Phase 3** - engine consumes athlete state. Phase 2 fully landed:
-data layer + surfaces. Patrol header carries freshness + intensity
-chips alongside compliance + streak. Strike rebuilt with athlete state
-card, intensity history bars, and mileage trajectory. Progression
-flag card surfaces below the matrix when caution/risk thresholds are
-crossed.
+**Phase R1 - VELOCITY visual rebrand.** The product moved from the
+Night Ninjas brutalist aesthetic to the VELOCITY cockpit aesthetic
+(rounded-12 cards, 4-item top nav, layered surfaces, semantic teal
+alongside accent orange). Documentation foundations landed: DESIGN.md,
+BRAND.md, ROADMAP.md updated, README.md updated, Tailwind tokens
+extended. Page-by-page restyle is the next session's work.
+
+After R1 (visual rebrand), the planned sequence is:
+
+- **R2** - Surface existing data more visually (Category B from the
+  redesign brief): heart-rate zone distribution per session, macrocycle
+  phase bar on dojo cards, microcycle preview pane, training load vs
+  recovery line chart, monthly volume + delta, last-week adherence chip.
+- **R3+** - Original Phase 3b onwards (engine state-awareness, then
+  Phase 4-9 per the original plan).
+
+The deferred Category C work (HRV / sleep / RHR / stress / AI Coach /
+Garmin-Coros-Apple Health integration) remains on the v2 horizon. Not
+in scope for the marathon build.
 
 ---
 
@@ -71,6 +91,100 @@ already does, not as celebration.
   post-program weeks use 4-week chronic load. Floors at 25 km/wk,
   ceilings at chronic × 1.1. Synthesised weeks render with `—  (base)`
   in the W-number column so they're visibly distinct from coached weeks.
+
+---
+
+## Phase R1 - VELOCITY visual rebrand 🟢 SUBSTANTIALLY DONE
+
+The visual rebrand has landed. The product is now VELOCITY in name, top-nav,
+wordmark, card system, button system, and palette. Page H1 labels match
+the new IA (Dashboard / Methodology / Athlete State / Schedule / Trends /
+Equipment / Wellness / Settings / Reference).
+
+**Landed in foundations bundle (73fa351):**
+- `DESIGN.md` rewritten for VELOCITY visual system
+- `BRAND.md` created with identity, voice, locale defaults
+- `README.md` updated with rebrand callout
+- `ROADMAP.md` (this file) updated
+- Tailwind tokens extended (rounded-xl/lg/2xl, accent-glow, signal-ok teal,
+  ink-line-bold, shadow-card variants)
+- Top horizontal nav (`components/nav/topnav.tsx`) replaces left sidebar
+- VELOCITY wordmark replaces Night Ninjas wordmark
+
+**Landed in restyle bundle (next):**
+- Card primitive supports active variant with accent border + inner glow
+- `nn-card`/`nn-card-elevated`/`nn-card-active` utilities use rounded-xl + shadow-card
+- Button primitive uses rounded-lg, refined variants (primary now accent-fill,
+  critical now signal-miss-tinted, outline sits on ink-shadow)
+- All page eyebrows updated to new IA labels
+- All page H1 titles use new display labels per BRAND.md
+- Sidebar component deleted (was unreferenced after layout switch)
+
+**Plumbing landed for R1.5 + 3b:**
+- Settings keys: `prefs.coachMode`, `club.parkrun_id`, `club.terms_accepted_at`,
+  `club.window_default`, `club.last_share_generated_at`
+- TypeScript helpers: `getCoachMode`/`setCoachMode`, club share getters/setters
+- Schema: `plan_adjustments` table with `proposed_at`, `applied_at`,
+  `dismissed_at`, `trigger`, `rationale`, before/after state, mode, week
+- Migration 0006: `plan_adjustments` table created with proposed_at + trigger
+  indices
+
+**Still to do as polish (not blocking 3b):**
+- Active state on top nav (accent underline on the active bucket)
+- Streak chip on top nav showing actual streak count (currently a static icon)
+- Avatar dropdown menu (currently a static button)
+- Card padding/spacing audit page-by-page
+- Mobile responsiveness pass
+
+---
+
+## Phase R1.5 - Club schedule export
+
+Athlete-mediated, manual-step export of upcoming training schedule for
+club app consumption. Per athlete's choice (parkrun ID + terms acceptance
++ generate button), VELOCITY produces a JSON file the athlete uploads
+manually to the club app. No live API, no webhooks, no scheduled push.
+
+Settings keys + types are already plumbed in. R1.5 builds:
+- `lib/club-share/generator.ts` pure function
+- `lib/club-share/generator.test.ts` vitest coverage
+- `lib/actions/generate-club-share.ts` server action
+- `components/club-share/terms-modal.tsx` privacy disclosure
+- `components/club-share/generate-button.tsx` action UI
+- `app/(app)/settings/club-share-section.tsx` Settings card
+
+Default window: this week + next week (2 weeks). Stripped: completed
+sessions (compliance hit or partial), pace targets, HR zones. Window
+override at generate-time: 1w / 2w / 4w / next-race / program-end.
+Stale warning when last-generated >5 days ago, OR window >50% elapsed,
+OR substantive schedule change since last publish.
+
+---
+
+## Phase R2 - Surface existing data visually
+
+Build the "Category B" features the designer's redesign showed us could
+exist on top of data we already collect. None of these need new external
+integrations.
+
+- Heart-rate zone distribution chart per session (we have HR streams)
+- Macrocycle phase bar on dojo cards (BASE/STRENGTH/SPECIFIC) - dojo
+  engines compute phase weighting today
+- Typical microcycle preview pane on dojo cards (engines compute weekly
+  templates)
+- Training load vs recovery line chart - we have CTL/ATL/TSB
+- Monthly volume stat with month-over-month delta
+- Last-week adherence chip with 7-bar visual on Dashboard header
+
+Estimated: 1 session.
+
+---
+
+## Phase R3+ - Resume original roadmap
+
+After R1 (rebrand) and R2 (surface existing data), resume the originally
+planned phases starting from Phase 3b (engine state-awareness clamping).
+The original numbering below stays the same; R-phases sit above them.
 
 ---
 
@@ -133,7 +247,62 @@ mileage progression (#2), long-run proportion (#11)
 
 ---
 
-## Phase 3 — Engine consumes athlete state
+## Phase 3b - Engine state-awareness (with three-mode coach setting)
+
+**Why this matters:** state is useless if the prescription doesn't respect
+it. Phase 2 reports state; phase 3b makes it actionable. AND it does so
+in a way that respects the athlete's preferred level of automation.
+
+**Three coach modes (`prefs.coachMode` setting):**
+
+1. **manual** - engine surfaces insights only. User manually edits plan if
+   they want. Insights logged to `plan_adjustments` with applied_at = NULL.
+2. **assisted** (default) - engine proposes adjustments. UI surfaces
+   "engine recommends: cut Tuesday tempo by 2km. [Apply] [Dismiss]".
+   `plan_adjustments` row written on propose; `applied_at` set on accept,
+   `dismissed_at` set on dismiss.
+3. **automatic** - engine applies adjustments and notifies. Plan changes
+   immediately. `plan_adjustments` row written with `applied_at` set.
+
+**Two safety rails (regardless of mode):**
+
+- ACWR breach >1.5 forces a volume cut even in manual mode (it cannot be
+  silently dismissed; requires explicit acknowledgement)
+- Athlete-logged injuries never trigger any auto-adjust; only the athlete
+  updates prescriptions during recovery
+
+**Build:**
+
+- `interpretState(state, phase) -> StateInterpretation` per dojo (8 files)
+- `applyAdjustment(template, interpretation) -> WeekTemplate` per dojo
+- `prefs.coachMode` setting (already plumbed) wired into engine flow
+- `plan_adjustments` table (already migrated) written by every proposal
+- Visible "engine adjusted" indicator on Patrol matrix when prescriptions
+  differ from the dojo's raw template
+- New section in Settings → "Coach Mode" with the three radio options
+- Hard ACWR cap implemented as a non-overridable safety floor
+
+**Pre-work recommendation:**
+
+Before commencing 3b's clamp logic, ship engine snapshot tests (one half
+session). Each of 8 dojo engines gets a `*.snapshot.test.ts` that runs
+`renderWeek` across program weeks 1-18 with various inputs and snapshots
+the output. When clamps are added, snapshot diffs catch any regression
+in dojos we're not currently dogfooding.
+
+**Override-frequency analysis (deferred to v2):**
+
+The `plan_adjustments` audit table accumulates data starting in 3b. A
+v2 feature reads this to personalise thresholds: if an athlete dismisses
+volume-cut suggestions 5 times without injury, the threshold loosens for
+that athlete.
+
+---
+
+## Phase 3 — Engine consumes athlete state (LEGACY ENTRY)
+
+> Original Phase 3 entry; superseded by Phase 3b above which adds the
+> three-mode coach architecture. Kept here for traceability.
 
 **Why this matters:** state is useless if the prescription doesn't
 respect it. Phase 2 reports state; phase 3 makes it actionable.

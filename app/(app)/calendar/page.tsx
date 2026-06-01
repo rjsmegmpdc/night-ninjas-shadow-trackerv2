@@ -21,12 +21,12 @@ export default async function CalendarPage() {
   await autoRefreshIfDue();
 
   return (
-    <div className="px-12 py-10 max-w-7xl mx-auto space-y-8">
+    <div className="px-4 sm:px-8 lg:px-12 py-10 max-w-7xl mx-auto space-y-8">
       <SyncStatusBanner />
       <header className="border-b border-ink-line pb-6 space-y-1">
-        <span className="nn-caps">calendar · plan around real life</span>
+        <span className="nn-caps">training - schedule</span>
         <h1 className="font-display tracking-wide-display text-5xl uppercase">
-          Calendar
+          Schedule
         </h1>
         <div className="font-mono text-bone-dim text-sm max-w-2xl">
           Races, group runs, holidays, work trips, sickness — every input the

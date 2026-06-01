@@ -18,6 +18,7 @@ import {
 import { DisconnectStravaForm, WipeEverythingForm } from '@/components/settings/destructive-forms';
 import { ExportDataButton } from '@/components/settings/export-data-button';
 import { SyncJobsTable } from '@/components/settings/sync-jobs-table';
+import { FormSubmitButton } from '@/components/ui/form-submit-button';
 
 /**
  * Settings — admin surface for the install.
@@ -61,9 +62,9 @@ export default async function SettingsPage() {
   const stravaConnected = clientId != null && tokens != null;
 
   return (
-    <div className="px-12 py-10 max-w-5xl mx-auto space-y-8">
+    <div className="px-4 sm:px-8 lg:px-12 py-10 max-w-5xl mx-auto space-y-8">
       <header className="border-b border-ink-line pb-6 space-y-1">
-        <span className="nn-caps">settings · system</span>
+        <span className="nn-caps">profile - settings</span>
         <h1 className="font-display tracking-wide-display text-5xl uppercase">
           Settings
         </h1>
@@ -146,18 +147,18 @@ export default async function SettingsPage() {
               <CardLabel>trigger sync</CardLabel>
               <div className="flex flex-col sm:flex-row gap-3">
                 <form action={startIncrementalSync} className="flex-1">
-                  <Button variant="outline" size="md" type="submit" className="w-full">
+                  <FormSubmitButton variant="outline" size="md" className="w-full" pendingLabel="Syncing…">
                     Sync now
-                  </Button>
-                  <div className="font-mono text-[10px] text-bone-mute mt-2 leading-relaxed">
+                  </FormSubmitButton>
+                  <div className="font-mono text-xs text-bone-mute mt-2 leading-relaxed">
                     ↳ pulls activities since last sync. fast, no rate limit risk.
                   </div>
                 </form>
                 <form action={startExtendedHistorySync} className="flex-1">
-                  <Button variant="primary" size="md" type="submit" className="w-full">
+                  <FormSubmitButton variant="primary" size="md" className="w-full" pendingLabel="Pulling history…">
                     Pull full history
-                  </Button>
-                  <div className="font-mono text-[10px] text-bone-mute mt-2 leading-relaxed">
+                  </FormSubmitButton>
+                  <div className="font-mono text-xs text-bone-mute mt-2 leading-relaxed">
                     ↳ fetches all activities older than what's already synced.
                     pauses if rate-limited.
                   </div>
@@ -248,7 +249,7 @@ export default async function SettingsPage() {
             US convention.
           </p>
           <FirstDayOfWeekToggle initial={firstDayOfWeek} />
-          <p className="font-mono text-[10px] text-bone-mute leading-relaxed pt-2 border-t border-ink-line">
+          <p className="font-mono text-xs text-bone-mute leading-relaxed pt-2 border-t border-ink-line">
             ↳ display only - the underlying training week is always Monday-anchored.
           </p>
         </Card>
@@ -272,7 +273,7 @@ export default async function SettingsPage() {
             specifically chasing a "run every day" streak.
           </p>
           <StreakModeToggle initial={streakRunEverydayMode} />
-          <p className="font-mono text-[10px] text-bone-mute leading-relaxed pt-2 border-t border-ink-line">
+          <p className="font-mono text-xs text-bone-mute leading-relaxed pt-2 border-t border-ink-line">
             ↳ streak refreshes after each Strava sync. miss day = yesterday had
             no qualifying activity. today is excluded (still in progress).
           </p>
@@ -315,8 +316,8 @@ export default async function SettingsPage() {
           </div>
         </Card>
 
-        <Card className="border-accent/40 space-y-4">
-          <CardLabel className="text-accent">danger zone</CardLabel>
+        <Card className="border-signal-miss/40 space-y-4">
+          <CardLabel className="text-signal-miss">danger zone</CardLabel>
           <p className="text-bone-dim text-sm leading-relaxed">
             Wipes everything: every activity, every race, every plan, every
             sync job, every setting. Strava credentials too. The schema stays
@@ -357,7 +358,7 @@ function SectionHeading({
 function Cell({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="bg-ink p-4">
-      <div className="nn-caps text-[10px]">{label}</div>
+      <div className="nn-caps">{label}</div>
       <div className="mt-1 text-bone">{children}</div>
     </div>
   );
@@ -374,5 +375,5 @@ function formatRelative(d: Date): string {
   if (h < 24) return `${h}h ago`;
   const days = Math.floor(h / 24);
   if (days < 14) return `${days}d ago`;
-  return d.toLocaleDateString('en-NZ', { day: '2-digit', month: 'short', year: 'numeric' });
+  return d.toLocaleDateString(undefined, { day: '2-digit', month: 'short', year: 'numeric' });
 }

@@ -11,57 +11,61 @@
     "sha256": "ed6d2f00fab1c8022b8e830cdb3b8a0d55426817d0abc6d4d7fab02a30fa61c8",
     "size": 861
   },
+  "BRAND.md": {
+    "sha256": "4dac8e3c279408df4f94ca44afc4b0641cd6fd27f627b17f7dc8fdc82e82a159",
+    "size": 5125
+  },
   "DESIGN.md": {
-    "sha256": "94c7dec9f1f8c65348b942d86cef9dd2e50fc526b39dce358388d8cbd0382dd6",
-    "size": 7690
+    "sha256": "1191b2fc25d99bbf266cee96316131470f03745a68820d891393e7409ea90e96",
+    "size": 9624
   },
   "README.md": {
-    "sha256": "a33ca8a96c64f3309a6d08d29db2c72ea6c2e789bdb2d9b0a5ee1af3b4fa3464",
-    "size": 8365
+    "sha256": "1e5598323afe49e3e90f749ac922676a8b921da36524c3d83b946678ddc05413",
+    "size": 8775
   },
   "ROADMAP.md": {
-    "sha256": "58d78425f24cb4b9eb7302ce05953f16df179db8781766163f67dccd51236155",
-    "size": 23538
+    "sha256": "bf65bb9785166b91bcf2a84ca9f81e431ce1af0b91c5cec49e5f28797c32426a",
+    "size": 31142
   },
   "app\\(app)\\calendar\\page.tsx": {
-    "sha256": "b2073c6a71ad59a0c2ca6817bd8a5f286ea811cece6778860d0423009a0db4f8",
-    "size": 2782
+    "sha256": "27ecc50a1d820c78930037497fff081ba337f8cdcdc85e9c6c8d27567ef0823b",
+    "size": 2768
   },
   "app\\(app)\\dojo\\page.tsx": {
-    "sha256": "9d6a6366014184c0f7ccf557e58626f3d1e19eff50a18134b5471ee1f33df40f",
-    "size": 2867
+    "sha256": "ae7c52ecc326342c2c2a37897cb4b48c783bbf2fb5c3af833c80c492c7aa6456",
+    "size": 2869
   },
   "app\\(app)\\help\\page.tsx": {
-    "sha256": "b965a377be7287303b32baffa03af77e084dd04ef093655f67fd61dbf8099d7a",
-    "size": 23709
+    "sha256": "edaf65b5dd8c7d03e4312d338ff5920b676afb2c744920e4a4efce635ed4ab24",
+    "size": 23705
   },
   "app\\(app)\\journal\\page.tsx": {
-    "sha256": "208b3a87fb953e502ac782c2b5c028886246c06ab2ef34e7ea5fbb7b7e44b9e3",
-    "size": 1820
+    "sha256": "00e5c651b7c33823eef60f10755e343db585ced7f9d9b4f34b0f670689393ebd",
+    "size": 1814
   },
   "app\\(app)\\layout.tsx": {
-    "sha256": "63f09aef0c66819363a937738815376b3c1e5e6550d8950aec97be0dfd45d7c8",
-    "size": 285
+    "sha256": "8483d88c268bfd88b3a94b3c60d9c24311c0b84e6cfc2a0a25b75e4748ce1eca",
+    "size": 585
   },
   "app\\(app)\\patrol\\page.tsx": {
-    "sha256": "7dadea4e91a31c2622d849624807b7c5bae5fce4c5a3bab6f4b351a5cc199b1c",
-    "size": 18861
+    "sha256": "73f8956e00b814b8be9a2319cb6be3ae96fb2d85320193740208641defbeba66",
+    "size": 18864
   },
   "app\\(app)\\recon\\page.tsx": {
-    "sha256": "5b803cb38d74317aa11c80739e58f955d6e88b5b8b637e6ac53355607b91c93e",
-    "size": 18051
+    "sha256": "05ea591269d6006c1c559e2fe562d37f5772e723f1470a3c7b4414aa1e736fdc",
+    "size": 18036
   },
   "app\\(app)\\settings\\page.tsx": {
-    "sha256": "adebb62c96f6e4cabf81241a64f23c115c4e3e58e23892bdb6a8f105156d4ff5",
+    "sha256": "e164ae26628a89f15c70083c74d833c8cc5fb5df940dbb36005fe119eba4dd9e",
     "size": 14814
   },
   "app\\(app)\\shoes\\page.tsx": {
-    "sha256": "ef3acf6ea358efee28b82d05e00aa6d0aca9de8242fa8532fe3aca6f4739b8dc",
+    "sha256": "7e8c00a2f85e77842840d68d7079fe087757e7a3a3265e25cb111ef489fd1d2c",
     "size": 5539
   },
   "app\\(app)\\strike\\page.tsx": {
-    "sha256": "9638641bb1b26b32a335bed099c0c5e9c77e72d8cd0e4b7e66e3e556906fc55b",
-    "size": 4548
+    "sha256": "41941f99e13d57dbd3191079c8a1a904ea3d940de904a75c970caed795c92025",
+    "size": 4558
   },
   "app\\api\\feedback\\log-summary\\route.ts": {
     "sha256": "a6cf2070ebea215243b9aa8594064782fa0c0dd78453cbafd17d4cb9fd2ee722",
@@ -96,8 +100,8 @@
     "size": 2098
   },
   "app\\globals.css": {
-    "sha256": "4e536333cc14b6c9769f6a06b7ac1e7ed42dfb9686d20695d2c0370b5e97587b",
-    "size": 6890
+    "sha256": "392b92758d7d680feaac42677d5b48e5cfa4628b0ab832b9f64186f2b3079397",
+    "size": 7123
   },
   "app\\layout.tsx": {
     "sha256": "cf4ac46c7fc07cfab41aea61c3c9a3d9dfdcf22739cbf12653dec177719d9e31",
@@ -148,8 +152,8 @@
     "size": 2282
   },
   "check.ps1": {
-    "sha256": "7732fc08f04aa86838861fee04dcd3874dcc6af1f5c81d24b561c85f7e039a4a",
-    "size": 23520
+    "sha256": "f5c1332a57d7ebff64c88ccdf25efa20e927e4dc5adc0228adf1f6b652af87a7",
+    "size": 23570
   },
   "cleanup-stray-home-files.ps1": {
     "sha256": "fb0af7e9007d3d6292776cf83141d4eca0431ab718e8641e6b5fcfd40cfe9365",
@@ -164,8 +168,8 @@
     "size": 1688
   },
   "components\\brand\\wordmark.tsx": {
-    "sha256": "7bd4a8318b4b60789a9f812afd283d819f2cc5bcb93ca83e66d80d133270d8bd",
-    "size": 749
+    "sha256": "9830f76d5c5367362aaf5e244a05d6cccebca18c9e843ff1904f7d0ae96cd38f",
+    "size": 979
   },
   "components\\calendar\\add-personal-day-form.tsx": {
     "sha256": "4b87c06a21b2b0ccd21fe298342ef2df9a13477fc9b3751327c7cdc7b47cd88a",
@@ -219,9 +223,9 @@
     "sha256": "8a423e78a7d045c2e21d95c46fec5ffb38071a7986eb9f174ec8506ca3c658c9",
     "size": 11254
   },
-  "components\\nav\\sidebar.tsx": {
-    "sha256": "0d3074abb4f37c59b8a43f41820cbf684bf46f963279a900738fbd839d3740a1",
-    "size": 3268
+  "components\\nav\\topnav.tsx": {
+    "sha256": "00ddda10763e19a34830dda0a6ec50e0046050f37a6caf363f249c5baac35860",
+    "size": 3320
   },
   "components\\patrol\\freshness-chip.tsx": {
     "sha256": "ff66179ffb062e826a5014a9e76fe846037c00d65a4c60329849bd0ff29f55d7",
@@ -364,12 +368,12 @@
     "size": 1997
   },
   "components\\ui\\button.tsx": {
-    "sha256": "8c99bde130bac9a47f5366f8182acbf22ce0065bdab18336ce7ca650f19b24d6",
-    "size": 1905
+    "sha256": "6097bac6554c9bc94a4e50f2b89272422d022ef37c824df60b42e82695e06f9c",
+    "size": 1986
   },
   "components\\ui\\card.tsx": {
-    "sha256": "ba65f284f7af50f049940af8aad2e7ae807fe8717551d7f766ceab105b6cd2b0",
-    "size": 1474
+    "sha256": "7b139ee1cdaacd58a7ba1b5facf761725ae111c98abb4a43e36d2243deff4f71",
+    "size": 1688
   },
   "components\\ui\\empty-state.tsx": {
     "sha256": "330f741ae97143df6ee1106b3645505efa6438ea6c171b03961818555fee8b4d",
@@ -579,9 +583,13 @@
     "sha256": "2e23429a6f5a7bf60c623529d669e89a676c4c3c4b8844d53c5c4fbac9e52622",
     "size": 789
   },
+  "lib\\db\\migrations\\0006_plan_adjustments.sql": {
+    "sha256": "ce2606ec084704a890d3854d34e6890f1ab17bec3cc9eb6ca04ded7dc5f96713",
+    "size": 741
+  },
   "lib\\db\\schema.ts": {
-    "sha256": "d01895916bd0d4002ff563fd812a1f595a2c07c90b4a17c2ce41d3f73d5a69d8",
-    "size": 22477
+    "sha256": "b88c97c55fbd9b398802af00890b15fd929da856608b13cf9d6367a5765484b8",
+    "size": 24797
   },
   "lib\\plans\\active-plan.ts": {
     "sha256": "1a7a30e623b8ceb2edb822347aae0495d328a471daf1286d8f06f1520f3541d2",
@@ -724,8 +732,8 @@
     "size": 3658
   },
   "lib\\store\\settings.ts": {
-    "sha256": "680c7703cb9a911cea733c1e5406ea678c7ecea8f755754cbefc0bb88865ba6f",
-    "size": 4447
+    "sha256": "0236c6ec3d0d4d1f16d05362aac8293d1c0221095a0923eb57e4d5719ad3522b",
+    "size": 7430
   },
   "lib\\store\\usage-log.ts": {
     "sha256": "bb6b4004b4240fa25435d90ff9a2657932aaa967506bda8eddf57e0876a0d312",
@@ -768,8 +776,8 @@
     "size": 4505
   },
   "tailwind.config.ts": {
-    "sha256": "1c2e0ce2a3e44c2765cdea9a6facfee40bb7021e423db07118d342ba9e97bf28",
-    "size": 3029
+    "sha256": "156f6da819d3c7f8bb01bee065245ee84c227677cfa4d2b2ddcbaeb6eb2dccc0",
+    "size": 3813
   },
   "tsconfig.json": {
     "sha256": "9effb181e7fa4768405944a925f8e62ac7090fe94a104363f7842ba8e2e7fca7",

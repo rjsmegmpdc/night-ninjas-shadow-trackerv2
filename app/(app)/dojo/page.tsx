@@ -30,11 +30,11 @@ export default async function DojoPage() {
   const level = (goalRace?.level as 'beginner' | 'intermediate' | 'advanced') ?? 'intermediate';
 
   return (
-    <div className="px-12 py-10 max-w-7xl mx-auto space-y-8">
+    <div className="px-4 sm:px-8 lg:px-12 py-10 max-w-7xl mx-auto space-y-8">
       <header className="border-b border-ink-line pb-6 space-y-1">
-        <span className="nn-caps">dojo - your training method</span>
+        <span className="nn-caps">training - methodology</span>
         <h1 className="font-display tracking-wide-display text-5xl uppercase">
-          Dojo
+          Methodology
         </h1>
         <div className="font-mono text-bone-dim text-sm max-w-3xl">
           Each dojo brings a different philosophy. Pick the one that

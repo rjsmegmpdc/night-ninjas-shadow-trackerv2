@@ -277,6 +277,7 @@ $requiredFiles = @(
     'lib\db\migrations\0003_sync_jobs.sql',
     'lib\db\migrations\0004_shoes.sql',
     'lib\db\migrations\0005_plan_periods.sql',
+    'lib\db\migrations\0006_plan_adjustments.sql',
 
     # Library - plans (8 dojos + framework)
     'lib\plans\active-plan.ts',
@@ -341,7 +342,7 @@ $requiredFiles = @(
 
     # Components - feedback / nav / patrol / settings
     'components\feedback\feedback-button.tsx',
-    'components\nav\sidebar.tsx',
+    'components\nav\topnav.tsx',
     'components\patrol\race-countdown.tsx',
     'components\patrol\program-matrix-expand.tsx',
     'components\patrol\program-matrix.tsx',
