@@ -61,7 +61,7 @@ export default async function PatrolPage() {
   const hasData = activityCount > 0;
 
   return (
-    <div className="px-12 py-10 max-w-7xl mx-auto space-y-10">
+    <div className="px-4 sm:px-8 lg:px-12 py-8 sm:py-10 max-w-7xl mx-auto space-y-10">
       <SyncStatusBanner />
 
       {!hasData && (

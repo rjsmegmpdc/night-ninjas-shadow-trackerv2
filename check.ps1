@@ -421,6 +421,7 @@ $requiredFiles = @(
     # Components - feedback / nav / patrol / settings
     'components\feedback\feedback-button.tsx',
     'components\nav\topnav.tsx',
+    'components\nav\avatar-menu.tsx',
     'components\patrol\race-countdown.tsx',
     'components\patrol\program-matrix-expand.tsx',
     'components\patrol\program-matrix.tsx',

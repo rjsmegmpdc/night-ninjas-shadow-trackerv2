@@ -222,12 +222,18 @@ Equipment / Wellness / Settings / Reference).
 - Migration 0006: `plan_adjustments` table created with proposed_at + trigger
   indices
 
-**Still to do as polish (not blocking 3b):**
-- Active state on top nav (accent underline on the active bucket)
-- Streak chip on top nav showing actual streak count (currently a static icon)
-- Avatar dropdown menu (currently a static button)
-- Card padding/spacing audit page-by-page
-- Mobile responsiveness pass
+**R1 polish ✅ SHIPPED:**
+- Active-bucket underline on the top nav (was already in place)
+- Streak chip on the top nav showing the REAL count - the layout fetches
+  `getStreakState` (server) and passes it into the client `TopNav`; flame goes
+  accent when a streak is live
+- Avatar dropdown menu (`components/nav/avatar-menu.tsx`) - Profile / Settings /
+  Help links + the reused `ThemeToggle`; closes on outside-click / Escape
+- Bounded mobile pass: responsive page padding (`px-4 -> sm:px-8 -> lg:px-12`)
+  across the app pages, responsive top-nav spacing, and the program matrix
+  stacks its legend below the grid on narrow screens
+- Deferred: exhaustive per-component card-padding audit; a deeper matrix
+  mobile redesign (horizontal-scroll day grid).
 
 ---
 

@@ -2,8 +2,9 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Flame, User } from 'lucide-react';
+import { Flame } from 'lucide-react';
 import { Wordmark } from '@/components/brand/wordmark';
+import { AvatarMenu } from './avatar-menu';
 import { cn } from '@/lib/utils';
 
 /**
@@ -37,12 +38,12 @@ const NAV: NavBucket[] = [
   { label: 'Profile',   href: '/profile',  match: ['/profile', '/settings', '/help', '/shoes', '/journal'] },
 ];
 
-export function TopNav() {
+export function TopNav({ streakCount }: { streakCount?: number | null }) {
   const pathname = usePathname() ?? '';
 
   return (
     <header className="sticky top-0 z-50 bg-ink/95 backdrop-blur-sm border-b border-ink-line">
-      <div className="max-w-7xl mx-auto px-8 h-16 flex items-center justify-between gap-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-8 h-16 flex items-center justify-between gap-3 sm:gap-8">
         {/* Wordmark */}
         <Link href="/patrol" className="shrink-0">
           <Wordmark variant="accent" size="nav" />
@@ -73,21 +74,21 @@ export function TopNav() {
         </nav>
 
         {/* Right cluster - streak + avatar */}
-        <div className="flex items-center gap-3 shrink-0">
-          <button
-            type="button"
-            aria-label="Streak"
-            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-bone-dim hover:text-accent transition-colors"
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+          <Link
+            href="/patrol"
+            aria-label={streakCount ? `Streak: ${streakCount} days` : 'Streak'}
+            className={cn(
+              'flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg transition-colors',
+              streakCount ? 'text-accent' : 'text-bone-dim hover:text-accent'
+            )}
           >
             <Flame size={18} strokeWidth={1.5} />
-          </button>
-          <button
-            type="button"
-            aria-label="Profile"
-            className="w-9 h-9 rounded-full bg-ink-panel border border-ink-line flex items-center justify-center text-bone-dim hover:text-bone hover:border-ink-line-bold transition-colors"
-          >
-            <User size={16} strokeWidth={1.5} />
-          </button>
+            {streakCount != null && streakCount > 0 && (
+              <span className="font-mono text-sm tabular-nums">{streakCount}</span>
+            )}
+          </Link>
+          <AvatarMenu />
         </div>
       </div>
     </header>

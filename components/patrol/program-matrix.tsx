@@ -83,7 +83,7 @@ export async function ProgramMatrix({ activePlan }: { activePlan: ActivePlan }) 
       </div>
 
       <MatrixFilterShell paceZones={paceZones}>
-        <div className="grid grid-cols-[1fr_220px] gap-6 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_220px] gap-6 items-start">
           {/* Matrix */}
           <div className="space-y-1.5">
             <MatrixHeader firstDayOfWeek={firstDayOfWeek} />

@@ -33,7 +33,7 @@ export default async function ReconPage() {
 
   if (activityCount === 0) {
     return (
-      <div className="px-12 py-10 max-w-7xl mx-auto space-y-8">
+      <div className="px-4 sm:px-8 lg:px-12 py-8 sm:py-10 max-w-7xl mx-auto space-y-8">
         <Header />
         <EmptyState
           label="recon · no data yet"
@@ -47,7 +47,7 @@ export default async function ReconPage() {
 
   if (!activePlan) {
     return (
-      <div className="px-12 py-10 max-w-7xl mx-auto space-y-8">
+      <div className="px-4 sm:px-8 lg:px-12 py-8 sm:py-10 max-w-7xl mx-auto space-y-8">
         <Header />
         <EmptyState
           label="recon · plan not configured"
@@ -67,7 +67,7 @@ export default async function ReconPage() {
   const evaluableCount = result.weeks.filter((w) => w.compliance).length;
   if (evaluableCount < 4) {
     return (
-      <div className="px-12 py-10 max-w-7xl mx-auto space-y-8">
+      <div className="px-4 sm:px-8 lg:px-12 py-8 sm:py-10 max-w-7xl mx-auto space-y-8">
         <Header />
         <Card className="space-y-4 max-w-2xl border-bone-mute/30">
           <CardLabel>not enough data yet</CardLabel>
@@ -101,7 +101,7 @@ export default async function ReconPage() {
   const observations = deriveObservations(result.weeks);
 
   return (
-    <div className="px-12 py-10 max-w-7xl mx-auto space-y-8">
+    <div className="px-4 sm:px-8 lg:px-12 py-8 sm:py-10 max-w-7xl mx-auto space-y-8">
       <Header />
 
       {/* Three big numbers */}
