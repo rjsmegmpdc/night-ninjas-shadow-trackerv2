@@ -42,6 +42,9 @@ const KEY = {
   NS_SUBT_HR_CAP: 'ns.subt_hr_cap',
   NS_HR_CONFIDENCE: 'ns.hr_confidence',
   NS_DEFAULTS_SEEDED: 'ns.defaults_seeded',
+  // Phase 5 - auxiliary strength-work preference
+  STRENGTH_MODALITY: 'profile.strength_modality',
+  STRENGTH_TARGET_PER_WEEK: 'profile.strength_target_per_week',
 } as const;
 
 async function get(key: string): Promise<string | null> {
@@ -345,6 +348,45 @@ export async function setNsHrCalibration(c: Partial<NsHrCalibration>): Promise<v
   if (c.easyHrCap !== undefined) writes.push(set(KEY.NS_EASY_HR_CAP, c.easyHrCap === null ? '' : String(c.easyHrCap)));
   if (c.subThresholdHrCap !== undefined) writes.push(set(KEY.NS_SUBT_HR_CAP, c.subThresholdHrCap === null ? '' : String(c.subThresholdHrCap)));
   if (c.confidence !== undefined) writes.push(set(KEY.NS_HR_CONFIDENCE, c.confidence));
+  await Promise.all(writes);
+}
+
+/* ============================================================================
+ * Strength / auxiliary-work preference (Phase 5).
+ *
+ * The athlete's preferred non-running strength modality + how often they want
+ * it. The plan engine can label and structure 'Strength' days accordingly.
+ * Defaults: none, 0/week.
+ * ========================================================================== */
+
+export type StrengthModality = 'weights' | 'pilates' | 'yoga' | 'mixed' | 'none';
+
+export interface StrengthPreferences {
+  modality: StrengthModality;
+  /** Target sessions per week, 0-3. */
+  targetPerWeek: number;
+}
+
+const STRENGTH_MODALITIES: StrengthModality[] = ['weights', 'pilates', 'yoga', 'mixed', 'none'];
+
+export async function getStrengthPreferences(): Promise<StrengthPreferences> {
+  const [modalityRaw, targetRaw] = await Promise.all([
+    get(KEY.STRENGTH_MODALITY),
+    getNum(KEY.STRENGTH_TARGET_PER_WEEK),
+  ]);
+  const modality = (STRENGTH_MODALITIES as string[]).includes(modalityRaw ?? '')
+    ? (modalityRaw as StrengthModality)
+    : 'none';
+  const targetPerWeek = targetRaw === null ? 0 : Math.max(0, Math.min(3, Math.round(targetRaw)));
+  return { modality, targetPerWeek };
+}
+
+export async function setStrengthPreferences(p: Partial<StrengthPreferences>): Promise<void> {
+  const writes: Promise<void>[] = [];
+  if (p.modality !== undefined) writes.push(set(KEY.STRENGTH_MODALITY, p.modality));
+  if (p.targetPerWeek !== undefined) {
+    writes.push(set(KEY.STRENGTH_TARGET_PER_WEEK, String(Math.max(0, Math.min(3, Math.round(p.targetPerWeek))))));
+  }
   await Promise.all(writes);
 }
 

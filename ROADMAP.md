@@ -451,14 +451,20 @@ the input signals scaling as later phases add data sources
 
 ---
 
-## Phase 5 — Athlete profile (calibration + preferences + injury ledger) 🟡 PARTIAL
+## Phase 5 — Athlete profile (calibration + preferences + injury ledger) ✅ SHIPPED
 
-**Shipped so far:** the editable program **start date**
-(`lib/actions/plan-start-date.ts`, canonical `plan_periods.startDate`); and
-the **body & calibration** basics, which landed earlier under R2.5 (athlete
-profile in settings: age/weight/sex/maxHr/restingHr) + the NS personal HR
-caps. **Still pending:** a dedicated `/profile` route; strength-modality
-preferences; the injury/illness ledger; and the daily wellness slider.
+**Shipped:** the editable program start date (`lib/actions/plan-start-date.ts`);
+body & calibration (R2.5 athlete profile + NS HR caps); and now a dedicated
+**`/profile`** route (Profile nav bucket) aggregating those plus three new
+pieces: **strength-modality preferences** (`getStrengthPreferences`/`setStrengthPreferences`
+in settings, `lib/actions/profile.ts`, `StrengthPrefsForm`); a daily **wellness
+slider** writing the journal table (`lib/actions/wellness.ts` - the first
+app-side writer of `journal`, no-clobber upsert by date; `WellnessSliderForm`);
+and an **injury & illness ledger** with a per-body-area vulnerability score
+(`lib/analysis/injury-vulnerability-pure.ts` + tests, a pure read over the
+Phase 4 interruptions; `InjuryLedger`). The `/profile` page uses responsive
+padding (first of the R1 mobile pass). **Deferred:** running-economy proxy
+(cadence/stride) calibration sharpening.
 
 **Why this matters:** the engine and freshness model are running on
 generic assumptions. The profile is where the athlete tells the system
