@@ -1,0 +1,47 @@
+#!/bin/sh
+# Pre-commit hook: (1) secret scan via gitleaks, (2) destructive pattern scan.
+# Blocks commits containing secrets or destructive SQL/shell patterns.
+
+# ---- 1. SECRET SCAN (gitleaks) ----------------------------------------
+
+if ! command -v gitleaks > /dev/null 2>&1; then
+  echo "warning: gitleaks not found - secret scan skipped."
+  echo "  Install: https://github.com/gitleaks/gitleaks#installing"
+else
+  echo "Running gitleaks secret scan..."
+  if ! gitleaks protect --staged --config=.gitleaks.toml --redact -v; then
+    echo ""
+    echo "gitleaks detected potential secrets in staged files."
+    echo "  Review findings above. Add allowlist to .gitleaks.toml for false positives."
+    echo "  Commit blocked."
+    exit 1
+  fi
+  echo "Secret scan passed."
+fi
+
+# ---- 2. DESTRUCTIVE PATTERN SCAN (Option A) ---------------------------
+# Scans staged diff for destructive SQL/shell patterns that indicate
+# irreversible operations being introduced into the codebase.
+
+DESTRUCTIVE_PATTERNS='DROP TABLE\|DROP DATABASE\|DROP SCHEMA\|TRUNCATE TABLE\|DELETE FROM [A-Za-z_][A-Za-z0-9_]* ;$\|DELETE FROM [A-Za-z_][A-Za-z0-9_]*;$\|rm -rf\|rm -fr\|git push.*--force\|git push.*-f \|git reset --hard\|git clean -f\|Remove-Item.*-Recurse.*-Force'
+
+# Exclude hook/config files — they contain pattern strings as definitions,
+# not as live commands, and would always trigger a false positive.
+STAGED_DIFF=$(git diff --cached --unified=0 \
+  -- ':!.githooks/*' ':!.gitleaks.toml' ':!scripts/hooks/*')
+
+if echo "$STAGED_DIFF" | grep -q "^+" && echo "$STAGED_DIFF" | grep "^+" | grep -qi "$DESTRUCTIVE_PATTERNS"; then
+  echo ""
+  echo "DESTRUCTIVE PATTERN DETECTED in staged changes:"
+  echo "$STAGED_DIFF" | grep "^+" | grep -i "$DESTRUCTIVE_PATTERNS" | head -10
+  echo ""
+  echo "Your staged diff contains a pattern that may introduce irreversible operations."
+  echo "  - SQL DROP / TRUNCATE / DELETE without WHERE"
+  echo "  - Shell rm -rf, force-push, hard reset"
+  echo "Review carefully. If intentional and approved by Matt, commit with:"
+  echo "  git commit --no-verify  (only with Matt's explicit approval)"
+  exit 1
+fi
+
+echo "Destructive pattern scan passed."
+exit 0
