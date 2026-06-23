@@ -113,12 +113,12 @@ doesn't, it doesn't ship.
 
 ## Current focus
 
-**Phases 9 + 11 + 10 + 13 + 14 - SHIPPED.** Phase 9: coach voice, reflection, debrief. Phase 11:
-shoe recommender + rotation health. Phase 10: BYOK AI (briefing, session content, key management).
-Phase 13: long-run fueling guide (Patrol), heat-adjusted fueling (race page), AI fueling
-personalisation. Phase 14: per-block volume + long-run capacity caps on Dojo, three-tier fallback
-(block → global → engine default). 422 tests.
-**Next candidate:** Phase 15.
+**Phases 9 + 11 + 10 + 13 + 14 + 15 - SHIPPED.** Phase 9: coach voice, reflection, debrief.
+Phase 11: shoe recommender + rotation health. Phase 10: BYOK AI (briefing, session content,
+key management). Phase 13: long-run fueling guide, heat-adjusted fueling, AI fueling.
+Phase 14: per-block volume + long-run capacity caps. Phase 15: training pace reference card
+(Dojo), block readiness preview, pace compliance on Patrol. 440 tests.
+**Next candidate:** Phase 16 (software audit + backlog).
 Deferred/blocked: Phase 6 course-profile + Phase 7 stored-weather (per-activity data not
 fetched); first live Garmin sync.
 Block context: Hansons 18-week block starts ~28/06/2026 (sub-3:00 Auckland
@@ -819,6 +819,26 @@ the product matures, this becomes a real strategic question.
 - Versioned dojo files with update mechanism
 - "Dojo authoring" mode for coaches to define custom dojos
 - Optional: subscription tier for community-maintained dojo updates
+
+---
+
+## Phase 15 — Training paces + block readiness ✅ SHIPPED
+
+**Shipped 2026-06-24.**
+
+- **Training pace reference card** (`components/dojo/pace-zones-card.tsx`) — all 7 Hansons
+  zones (Recovery / Easy / Long / Marathon / Threshold / Interval / Repetition) as formatted
+  min:sec/km bands, derived live from `engine.derivePaceZones(params)`. Shown on the Dojo page
+  whenever an active plan exists. Updates automatically when goal time changes.
+- **Block readiness preview** (`components/dojo/block-readiness-card.tsx`) — compact 7-day
+  week 1 session strip with total km target and entry load requirement. Shown on the Dojo page
+  within ±21/14 days of block start.
+- **Pace compliance verdict on Patrol** — if the user already ran today, the "tonight's mission"
+  card shows the actual pace vs. the prescribed zone band: ✓ on target / ⚡ faster than zone /
+  ↓ slower than zone. Pure function: `checkPaceCompliance()` in `lib/plans/pace-compliance-pure.ts`
+  (18 tests covering all edge cases including zero zones, null inputs, and boundary values).
+
+**Total tests: 440 (up from 422).**
 
 ---
 

@@ -14,6 +14,11 @@ import {
 import { getActivitiesInRange, aggregateWeekStats } from '@/lib/analysis/week-queries';
 import { evaluateWeek, type SessionCompliance } from '@/lib/analysis/compliance';
 import { formatSpk, formatBand } from '@/lib/plans/derive';
+import {
+  checkPaceCompliance,
+  speedMsToSpk,
+  verdictLabel,
+} from '@/lib/plans/pace-compliance-pure';
 import type { SessionTarget, WeekTemplate } from '@/lib/plans/types';
 import { resolveWeekContext } from '@/lib/plans/week-context';
 import { logPageView } from '@/lib/store/instrument';
@@ -231,6 +236,26 @@ async function PatrolDashboard() {
     lastUsedDate: s.lastUsedDate,
   }));
   const shoeRecommendation = recommendShoe(tonightSession?.type ?? null, shoeData);
+
+  // Phase 15 — pace compliance for today's primary run.
+  // If the user already ran today, compare their avg pace against the prescribed zone.
+  const todayRuns = activities.filter(
+    (a) =>
+      a.startDateLocal.startsWith(todayIso) &&
+      (a.type === 'Run' || a.type === 'VirtualRun' || a.type === 'TrailRun')
+  );
+  const todayPrimaryRun = todayRuns.length
+    ? todayRuns.reduce((best, a) =>
+        (a.distanceM ?? 0) > (best.distanceM ?? 0) ? a : best
+      )
+    : null;
+  const todayRunSpk = todayPrimaryRun?.avgSpeedMs
+    ? speedMsToSpk(todayPrimaryRun.avgSpeedMs)
+    : null;
+  const todayRunKm = todayPrimaryRun?.distanceM
+    ? todayPrimaryRun.distanceM / 1000
+    : null;
+  const paceVerdict = checkPaceCompliance(todayRunSpk, tonightSession?.paceZone);
 
   // Volume cell: actual / target with %
   const volumePct = template.totalKmTarget > 0
@@ -471,6 +496,32 @@ async function PatrolDashboard() {
                     {tonightSession.notes}
                   </div>
                 )}
+                {/* Phase 15 — today's run vs prescribed zone */}
+                {todayRunSpk != null && paceVerdict !== 'unknown' && (
+                  <div className="flex items-center gap-2 pt-1 border-t border-ink-line/50">
+                    <span className="font-mono text-[10px] text-bone-mute uppercase tracking-widest">
+                      today&apos;s run
+                    </span>
+                    <span className="font-mono text-sm text-bone tabular-nums">
+                      {todayRunKm != null ? `${todayRunKm.toFixed(1)} km · ` : ''}
+                      {formatSpk(todayRunSpk)}/km
+                    </span>
+                    <span
+                      className={
+                        'font-mono text-[10px] uppercase tracking-widest ' +
+                        (paceVerdict === 'on-target'
+                          ? 'text-signal-ok'
+                          : paceVerdict === 'too-fast'
+                            ? 'text-signal-warn'
+                            : 'text-bone-mute')
+                      }
+                    >
+                      {paceVerdict === 'on-target' ? '✓ ' : paceVerdict === 'too-fast' ? '⚡ ' : '↓ '}
+                      {verdictLabel(paceVerdict)}
+                    </span>
+                  </div>
+                )}
+
                 {/* Phase 10 — session content generator for cross/strength days */}
                 {(tonightSession.type === 'cross' || tonightSession.type === 'strength') && (
                   <SessionContentButton

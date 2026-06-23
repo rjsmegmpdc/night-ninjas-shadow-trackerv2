@@ -405,6 +405,8 @@ $requiredFiles = @(
     'lib\plans\week-context.ts',
     'lib\plans\capacity-pure.ts',
     'lib\plans\capacity-pure.test.ts',
+    'lib\plans\pace-compliance-pure.ts',
+    'lib\plans\pace-compliance-pure.test.ts',
 
     # Library - shoes
     'lib\shoes\backfill.ts',
@@ -485,6 +487,8 @@ $requiredFiles = @(
     'components\dojo\program-shape-card.tsx',
     'components\dojo\start-date-editor.tsx',
     'components\dojo\program-capacity-editor.tsx',
+    'components\dojo\pace-zones-card.tsx',
+    'components\dojo\block-readiness-card.tsx',
     'components\settings\destructive-forms.tsx',
     'components\settings\ai-section.tsx',
     'components\settings\export-data-button.tsx',

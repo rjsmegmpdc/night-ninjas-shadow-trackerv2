@@ -8,6 +8,8 @@ import { phaseBandFor } from '@/lib/plans/state-awareness';
 import { ProgramShapeCard } from '@/components/dojo/program-shape-card';
 import { StartDateEditor } from '@/components/dojo/start-date-editor';
 import { ProgramCapacityEditor } from '@/components/dojo/program-capacity-editor';
+import { PaceZonesCard } from '@/components/dojo/pace-zones-card';
+import { BlockReadinessCard } from '@/components/dojo/block-readiness-card';
 import { RampCard } from '@/components/patrol/ramp-card';
 import { DojoPicker } from '@/components/dojo/dojo-picker';
 import { NsDojoPanel } from '@/components/dojo/ns-dojo-panel';
@@ -101,6 +103,25 @@ export default async function DojoPage() {
     settingsLongRunCap: settingsLongStr ? parseFloat(settingsLongStr) : null,
   });
 
+  // Phase 15 — training pace reference + block readiness.
+  // Pace zones are derived from the active plan engine; block readiness is
+  // shown when within 21 days of block start or in weeks 1-2.
+  const paceZones = activePlan ? activePlan.engine.derivePaceZones(activePlan.params) : null;
+  const daysUntilBlockStart = activePlan
+    ? Math.ceil((new Date(activePlan.params.startDate).getTime() - Date.now()) / 86400000)
+    : null;
+  const showBlockReadiness =
+    activePlan != null &&
+    daysUntilBlockStart != null &&
+    daysUntilBlockStart >= -14 &&
+    daysUntilBlockStart <= 21;
+  const week1Template = showBlockReadiness
+    ? activePlan!.engine.renderWeek(activePlan!.params, 1)
+    : null;
+  const entryKmRequired = showBlockReadiness
+    ? activePlan!.engine.entryWeeklyLoadKm(activePlan!.params.level)
+    : 0;
+
   // NS-specific data: load only when NS is the active dojo
   const isNsActive = selectedDojo === 'norwegian-singles' && activePlan?.engine.dojo === 'norwegian-singles';
   const [nsGuardReport, nsTrendData] = isNsActive
@@ -161,6 +182,25 @@ export default async function DojoPage() {
           longRunCapSource={capacityResolved.longRunCapSource}
           effectiveWeeklyCap={capacityResolved.weeklyVolumeCapKm}
           effectiveLongRunCap={capacityResolved.longRunCapKm}
+        />
+      )}
+
+      {/* Phase 15 — training pace reference card. */}
+      {activePlan && paceZones && (
+        <PaceZonesCard
+          paceZones={paceZones}
+          goalTimeS={activePlan.params.goalTimeS}
+          dojoName={activePlan.engine.displayName}
+        />
+      )}
+
+      {/* Phase 15 — block readiness preview (shown ±2 weeks around block start). */}
+      {showBlockReadiness && week1Template && (
+        <BlockReadinessCard
+          week1Template={week1Template}
+          daysUntilStart={daysUntilBlockStart!}
+          entryKmRequired={entryKmRequired}
+          dojoName={activePlan!.engine.displayName}
         />
       )}
 
