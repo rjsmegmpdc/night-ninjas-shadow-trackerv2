@@ -23,18 +23,24 @@ export async function createRecurringSession(formData: FormData) {
   const name = formData.get('name')?.toString().trim() || 'Group run';
   const dow = parseInt(formData.get('dow')?.toString() || '0', 10);
   const sessionType = toSessionType(formData.get('sessionType')?.toString());
-  const distMin = formData.get('typicalDistanceKmMin')?.toString();
-  const distMax = formData.get('typicalDistanceKmMax')?.toString();
+  const rawDistMin = formData.get('typicalDistanceKmMin') as string | null;
+  const rawDistMax = formData.get('typicalDistanceKmMax') as string | null;
+  const distMin = rawDistMin ? (Number.isFinite(parseFloat(rawDistMin)) ? parseFloat(rawDistMin) : null) : null;
+  const distMax = rawDistMax ? (Number.isFinite(parseFloat(rawDistMax)) ? parseFloat(rawDistMax) : null) : null;
   const paceLabel = formData.get('paceLabel')?.toString().trim() || null;
   const venue = formData.get('venue')?.toString().trim() || null;
   const isNinjaLoop = formData.get('isNinjaLoop') === 'true';
 
+  if (!isNinjaLoop && (!Number.isInteger(dow) || dow < 0 || dow > 6)) {
+    throw new Error(`Invalid day of week: ${dow}`);
+  }
+
   await getDb().insert(schema.recurringSessions).values({
     name,
     dow: isNinjaLoop ? -1 : dow,
-    sessionType: sessionType || 'easy',
-    typicalDistanceKmMin: distMin ? parseFloat(distMin) : null,
-    typicalDistanceKmMax: distMax ? parseFloat(distMax) : null,
+    sessionType,
+    typicalDistanceKmMin: distMin,
+    typicalDistanceKmMax: distMax,
     paceLabel,
     venue,
     isActive: true,

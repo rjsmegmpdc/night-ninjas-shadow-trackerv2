@@ -1,5 +1,6 @@
 import { TrendingUp, ShieldCheck, AlertTriangle, AlertOctagon, Minus } from 'lucide-react';
 import type { RampPlan } from '@/lib/plans/ramp';
+import { Card } from '@/components/ui/card';
 
 /**
  * RampCard - surfaces during pre-program base.
@@ -25,7 +26,7 @@ export function RampCard({ ramp }: { ramp: RampPlan | null }) {
   const Icon = display.Icon;
 
   return (
-    <div className={'border p-5 space-y-4 ' + display.borderClass}>
+    <Card className={'p-5 space-y-4 ' + display.borderClass}>
       <div className="flex items-center justify-between">
         <div className={'flex items-center gap-2 font-display tracking-wide-display uppercase text-xs ' + display.titleColour}>
           <Icon size={14} strokeWidth={1.5} />
@@ -101,7 +102,7 @@ export function RampCard({ ramp }: { ramp: RampPlan | null }) {
       <div className="border-t border-ink-line pt-3 font-mono text-[11px] leading-relaxed text-bone-dim">
         {ramp.message}
       </div>
-    </div>
+    </Card>
   );
 }
 

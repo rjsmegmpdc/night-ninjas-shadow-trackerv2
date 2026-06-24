@@ -1,6 +1,7 @@
 import type { NsGuardReport, GuardSeverity } from '@/lib/analysis/ns-guardrails';
 import { Shield, Check, AlertTriangle, XCircle, SlidersHorizontal } from 'lucide-react';
 import Link from 'next/link';
+import { Card } from '@/components/ui/card';
 
 /**
  * NS-2 / NS-3 - the Norwegian Singles discipline panel. Shown on the
@@ -41,7 +42,7 @@ export function NsGuardrailsCard({ report }: { report: NsGuardReport }) {
   const pos = (v: number) => `${Math.min((v / scaleMax) * 100, 100)}%`;
 
   return (
-    <div className="border border-ink-line rounded-xl p-6 space-y-4">
+    <Card elevated className="space-y-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Shield size={18} strokeWidth={1.5} className="text-accent" />
@@ -94,6 +95,6 @@ export function NsGuardrailsCard({ report }: { report: NsGuardReport }) {
           Edit HR caps
         </Link>
       </div>
-    </div>
+    </Card>
   );
 }

@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import {
   FlaskConical,
   Activity,
@@ -30,6 +31,11 @@ export default function TestLabPage() {
         </div>
       </header>
 
+      <p className="text-bone-dim text-sm font-mono">
+        This page is for testers verifying feature correctness. If you&apos;re a runner, you want{' '}
+        <Link href="/help">/help</Link> instead.
+      </p>
+
       <Notice>
         The automated suite (29 files, 472 tests) covers all pure computation.
         This page covers the <strong>user-visible behaviour</strong> that tests
@@ -40,10 +46,6 @@ export default function TestLabPage() {
 
       {/* ------------------------------------------------------------------ */}
       <Section icon={RefreshCw} badge="settings · sync" title="Strava sync">
-        <p className="text-bone-dim text-sm leading-relaxed mb-4">
-          Covers the sync job lifecycle: initial pull, incremental update,
-          interruption, resume, and rate-limiting behaviour.
-        </p>
         <ScenarioTable
           headers={['Scenario', 'Setup', 'Action', 'Expected result']}
           rows={[
@@ -89,10 +91,6 @@ export default function TestLabPage() {
 
       {/* ------------------------------------------------------------------ */}
       <Section icon={Activity} badge="patrol · dashboard" title="Training load (CTL / ATL / TSB)">
-        <p className="text-bone-dim text-sm leading-relaxed mb-4">
-          Patrol's daily summary card shows form (TSB), training load, and the
-          coaching message. These outputs derive from the EWMA engine.
-        </p>
         <ScenarioTable
           headers={['Scenario', 'Setup', 'Expected on Patrol']}
           rows={[
@@ -127,10 +125,6 @@ export default function TestLabPage() {
 
       {/* ------------------------------------------------------------------ */}
       <Section icon={BarChart2} badge="patrol · compliance" title="Session compliance">
-        <p className="text-bone-dim text-sm leading-relaxed mb-4">
-          Patrol shows planned sessions vs actual activities, with compliance
-          dots (OK / WARN / FAST / SLOW / SHORT / NONE) for each session.
-        </p>
         <ScenarioTable
           headers={['Scenario', 'Setup', 'Expected compliance dot']}
           rows={[
@@ -218,10 +212,6 @@ export default function TestLabPage() {
 
       {/* ------------------------------------------------------------------ */}
       <Section icon={Footprints} badge="shoes · recommender" title="Shoe recommender and rotation">
-        <p className="text-bone-dim text-sm leading-relaxed mb-4">
-          The Shoes page and the Patrol shoe card recommend footwear per
-          session type. Rotation health tracks wear across your fleet.
-        </p>
         <ScenarioTable
           headers={['Scenario', 'Setup', 'Expected result']}
           rows={[
@@ -261,10 +251,6 @@ export default function TestLabPage() {
 
       {/* ------------------------------------------------------------------ */}
       <Section icon={Flag} badge="race · planner" title="Race execution and recovery">
-        <p className="text-bone-dim text-sm leading-relaxed mb-4">
-          /race covers the execution plan (pacing + fueling), taper checklist,
-          and post-race recovery protocol.
-        </p>
         <ScenarioTable
           headers={['Scenario', 'Setup', 'Expected result']}
           rows={[
@@ -352,10 +338,6 @@ export default function TestLabPage() {
 
       {/* ------------------------------------------------------------------ */}
       <Section icon={AlertCircle} badge="calendar · state" title="Calendar events and state-awareness">
-        <p className="text-bone-dim text-sm leading-relaxed mb-4">
-          Calendar events (sickness, travel, work trips) feed the
-          state-awareness layer and adjust the plan automatically.
-        </p>
         <ScenarioTable
           headers={['Scenario', 'Setup', 'Expected result']}
           rows={[
@@ -381,7 +363,7 @@ export default function TestLabPage() {
             ],
             [
               'Ninja Loop holiday',
-              'NZ public holiday falls in the current week (auto-fetched from GitHub iCal)',
+              "NZ public holiday falls in the current week (auto-fetched from Sohnemann’s NZ iCal (GitHub))",
               'Calendar shows holiday entry; plan adjustments show it as a reduced-impact day',
             ],
           ]}
@@ -390,10 +372,6 @@ export default function TestLabPage() {
 
       {/* ------------------------------------------------------------------ */}
       <Section icon={BarChart2} badge="vo2max · analytics" title="VO2max tracking">
-        <p className="text-bone-dim text-sm leading-relaxed mb-4">
-          /vo2max accepts observations from multiple sources and shows trend
-          direction. Outliers are detected using MAD (not mean+std).
-        </p>
         <ScenarioTable
           headers={['Scenario', 'Setup', 'Expected result']}
           rows={[

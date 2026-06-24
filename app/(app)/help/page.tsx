@@ -30,6 +30,27 @@ export default function HelpPage() {
         </div>
       </header>
 
+      <nav className="flex flex-wrap gap-2" aria-label="Jump to section">
+        {[
+          { href: '#quick-start', label: 'Quick start' },
+          { href: '#glossary', label: 'Glossary' },
+          { href: '#screens', label: 'Screens' },
+          { href: '#flags', label: 'Compliance flags' },
+          { href: '#analytics', label: 'Analytics' },
+          { href: '#methodologies', label: 'Methodologies' },
+          { href: '#tasks', label: 'How-to' },
+          { href: '#privacy', label: 'Privacy' },
+        ].map(({ href, label }) => (
+          <a
+            key={href}
+            href={href}
+            className="px-3 py-1 text-xs font-mono border border-ink-line rounded hover:border-bone-dim text-bone-dim hover:text-bone transition-colors"
+          >
+            {label}
+          </a>
+        ))}
+      </nav>
+
       {/* ----- Quick start ----- */}
       <section id="quick-start" className="space-y-4">
         <SectionHeading icon={Compass} label="quick start">
@@ -71,16 +92,12 @@ export default function HelpPage() {
           What the words mean
         </SectionHeading>
         <Card className="space-y-3">
-          <p className="text-bone-dim text-sm leading-relaxed mb-4">
-            The app uses a few Night Ninjas-flavoured terms. Here's the
-            translation.
-          </p>
           <GlossaryTable
             rows={[
               ['Patrol', 'this week\u2019s training', 'The main dashboard. Your current week — sessions, paces, compliance flags. The screen you check daily.'],
               ['Mission', 'a planned session', 'One scheduled workout. Tuesday\u2019s tempo, Sunday\u2019s long run, etc.'],
               ['Recon', 'weekly report', 'Compliance trends. Did you hit the prescribed paces? Are you under-volume? Is intensity drifting?'],
-              ['Strike', 'peak training weeks', 'Your top training weeks ranked by volume, intensity, and consistency. Useful for spotting the athlete state when you felt strongest — and reproducing it.'],
+              ['Strike', 'peak training weeks', 'Your top training weeks ranked by volume, intensity, and consistency. Useful for spotting what you were doing when you felt strongest — and repeating it.'],
               ['Dojo', 'training plan', 'The training method behind your plan. Eight available — Hansons, Daniels, Pfitzinger, Higdon, Lydiard, Polarised (80/20), Ultra, and Custom. Each defines its own week structure, pace zones, taper schedule, and how it responds to your calendar.'],
               ['Calendar', 'races + life', 'Where you set goals, group runs, and tell the app about holidays, work trips, and other life stuff.'],
               ['Journal', 'wellness log', 'Daily sleep, stress, and energy tracking. The instrumentation that explains why you broke down at 85km last time.'],
@@ -270,10 +287,6 @@ export default function HelpPage() {
           What the numbers mean
         </SectionHeading>
         <Card className="space-y-3">
-          <p className="text-bone-dim text-sm leading-relaxed mb-4">
-            VELOCITY surfaces training-load metrics drawn from exercise science.
-            Here's what each one represents.
-          </p>
           <GlossaryTable
             rows={[
               ['CTL', 'chronic training load', 'Your 42-day rolling fitness score — a weighted average of daily training stress. A rising CTL means fitness is accumulating. Also called "form" in some tools.'],
@@ -293,11 +306,6 @@ export default function HelpPage() {
           The training philosophies
         </SectionHeading>
         <Card className="space-y-3">
-          <p className="text-bone-dim text-sm leading-relaxed mb-4">
-            Each dojo is a distinct training philosophy with different assumptions
-            about how fitness is built. Two sentences each — enough to pick the
-            right one.
-          </p>
           <GlossaryTable
             rows={[
               ['Hansons', 'cumulative fatigue model', 'Heavy weekly mileage at controlled paces; no single monster long run. The stimulus is the accumulated tiredness of training on tired legs day after day.'],

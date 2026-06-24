@@ -1,24 +1,26 @@
 'use client';
 
+import { X } from 'lucide-react';
+import { Card } from '@/components/ui/card';
 import { dismissPatrolOrientation } from '@/lib/actions/orientation';
 
 export function OrientationBanner() {
   return (
-    <div className="border border-accent/30 bg-ink-panel rounded-sm px-5 py-4 space-y-3">
+    <Card active className="px-5 py-4 space-y-3">
       <div className="flex items-start justify-between gap-4">
         <div className="space-y-0.5">
           <div className="nn-caps text-accent">welcome to VELOCITY</div>
           <p className="font-display tracking-wide-display text-lg uppercase">
-            Your training command centre
+            What you did vs what the plan said.
           </p>
         </div>
         <form action={dismissPatrolOrientation}>
           <button
             type="submit"
-            className="font-mono text-xs text-bone-mute hover:text-bone transition-colors mt-1"
+            className="font-mono text-xs text-bone-mute hover:text-bone transition-colors mt-1 flex items-center gap-1"
             aria-label="Dismiss orientation"
           >
-            dismiss ✕
+            Dismiss <X size={14} />
           </button>
         </form>
       </div>
@@ -43,6 +45,6 @@ export function OrientationBanner() {
           ↳ need more detail? <a href="/help" className="text-bone-dim hover:text-accent underline transition-colors">Read the reference guide</a>
         </p>
       </div>
-    </div>
+    </Card>
   );
 }

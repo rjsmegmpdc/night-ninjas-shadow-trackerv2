@@ -39,10 +39,12 @@ function paceSpkFromSpeed(avgSpeedMs: number | null): number | null {
 }
 
 function dowOf(isoLocal: string): number {
-  // ISO week with Mon=0 ... Sun=6
-  const d = new Date(isoLocal);
-  const js = d.getDay(); // Sun=0..Sat=6
-  return (js + 6) % 7;
+  // Parse YYYY-MM-DD explicitly to avoid UTC midnight shift.
+  // new Date('YYYY-MM-DD') is treated as UTC midnight in V8, so getDay()
+  // would return the UTC day which can differ from the local day near midnight.
+  const [y, m, d] = isoLocal.slice(0, 10).split('-').map(Number);
+  const js = new Date(y, m - 1, d).getDay(); // Sun=0..Sat=6, local time
+  return (js + 6) % 7; // Mon=0..Sun=6
 }
 
 export function evaluateWeek(

@@ -1,5 +1,6 @@
 import { TriangleAlert, AlertOctagon } from 'lucide-react';
 import type { MileageProgression, LongRunCheck } from '@/lib/analysis/progression';
+import { Card, CardLabel } from '@/components/ui/card';
 
 /**
  * ProgressionFlagCard - Patrol body indicator that surfaces ONLY when
@@ -51,11 +52,11 @@ export function ProgressionFlagCard({
   const titleColour = isRisk ? 'text-signal-miss' : 'text-signal-warn';
 
   return (
-    <div className={'border p-4 space-y-3 ' + borderColour}>
-      <div className={'flex items-center gap-2 font-display tracking-wide-display uppercase text-xs ' + titleColour}>
+    <Card className={'p-4 space-y-3 ' + borderColour}>
+      <CardLabel className={'flex items-center gap-2 ' + titleColour}>
         <Icon size={14} strokeWidth={1.5} />
         <span>training load - {worstSeverity}</span>
-      </div>
+      </CardLabel>
       <div className="space-y-2">
         {flags.map((flag, i) => {
           const flagColour = flag.severity === 'risk' ? 'text-signal-miss' : 'text-signal-warn';
@@ -69,7 +70,7 @@ export function ProgressionFlagCard({
           );
         })}
       </div>
-    </div>
+    </Card>
   );
 }
 

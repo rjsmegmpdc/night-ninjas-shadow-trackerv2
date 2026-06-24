@@ -198,7 +198,8 @@ export async function setCoachMode(value: CoachMode): Promise<void> {
  * ========================================================================== */
 
 export async function getClubParkrunId(): Promise<string | null> {
-  return await get(KEY.CLUB_PARKRUN_ID);
+  const v = await get(KEY.CLUB_PARKRUN_ID);
+  return v === '' ? null : v;
 }
 
 export async function setClubParkrunId(value: string | null): Promise<void> {
