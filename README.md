@@ -91,10 +91,12 @@ Renaming them would orphan existing user databases and credentials. User-facing 
 │ + Drizzle ORM │   │ — Strava credentials    │
 └───────────────┘   └─────────────────────────┘
          │
-    ┌────┴────────────────────────────┐
-    │ Strava API (only outbound call) │
-    │ + GitHub iCal (annual fetch)    │
-    └─────────────────────────────────┘
+    ┌────┴──────────────────────────────────────────┐
+    │ Strava API      (OAuth + activity sync)       │
+    │ Anthropic API   (AI insights — BYOK, opt-in)  │
+    │ Garmin Connect  (opt-in)                      │
+    │ GitHub iCal     (NZ holidays, annual fetch)   │
+    └───────────────────────────────────────────────┘
 ```
 
 ### Key directories
@@ -103,12 +105,18 @@ Renaming them would orphan existing user databases and credentials. User-facing 
 app/
 ├── (app)/              Main authenticated app
 │   ├── patrol/         Daily dashboard
-│   ├── recon/          Weekly compliance (placeholder)
-│   ├── strike/         Best week analysis (placeholder)
-│   ├── dojo/           Plan management (placeholder)
+│   ├── recon/          Weekly compliance
+│   ├── strike/         Peak training week analysis
+│   ├── dojo/           Plan management
 │   ├── calendar/       Races, group runs, events — full CRUD
-│   ├── journal/        Wellness tracking (placeholder)
-│   ├── settings/       System config (placeholder)
+│   ├── journal/        Wellness tracking
+│   ├── settings/       System config
+│   ├── shoes/          Gear inventory + rotation health
+│   ├── race/           Race execution planner + debrief
+│   ├── vo2max/         VO2max tracking + insights
+│   ├── profile/        Athlete profile
+│   ├── club/           Club view
+│   ├── coach-log/      Coach activity log
 │   └── help/           In-app user docs
 ├── setup/              7-step first-run wizard
 └── api/                Server endpoints (Strava OAuth, sync)
@@ -133,20 +141,30 @@ components/
 
 ### Schema
 
-10 SQLite tables. Run `npm run db:studio` to browse them in Drizzle Studio.
+20 SQLite tables. Run `npm run db:studio` to browse them in Drizzle Studio.
 
 | Table | Purpose |
 |---|---|
 | `activities` | Synced Strava activities (one source of truth) |
 | `plans` | User's active plan + history |
+| `plan_periods` | Date-bound plan period rows for matrix rendering |
+| `plan_adjustments` | Per-week plan overrides (volume cap, skip) |
+| `block_debriefs` | Training block retrospectives |
 | `journal` | Daily wellness entries |
+| `daily_health_metrics` | Biometric readings (HRV, resting HR, weight) |
 | `settings` | App key/value config |
 | `sync_log` | Legacy sync audit trail |
 | `sync_jobs` | Stateful, resumable sync runs |
 | `races` | Goal race + tune-ups |
+| `race_results` | Post-race debrief data |
 | `recurring_sessions` | Weekly group runs |
 | `calendar_events` | Holidays, trips, sickness |
 | `nz_holidays` | Cached public holidays from sohnemann iCal |
+| `shoes` | Gear inventory synced from Strava |
+| `activity_shoe_assignments` | Activity ↔ shoe link |
+| `shoe_price_watches` | Replacement model price tracking |
+| `vo2max_observations` | VO2max readings (Cooper, Rockport, device, lab) |
+| `interruptions` | Injury/illness interruption log |
 
 ### Plan engines
 
@@ -197,7 +215,7 @@ these automatically on next run.
 | Does my data leave this machine? | No |
 | Is there telemetry? | No. `NEXT_TELEMETRY_DISABLED=1` is set by default |
 | Where do my Strava tokens live? | OS keychain |
-| What outbound network calls? | `strava.com` for OAuth + sync; one annual GitHub fetch for NZ public holidays |
+| What outbound network calls? | `strava.com` for OAuth + sync; `anthropic.com` if AI insights enabled (BYOK); `connect.garmin.com` if Garmin connected; one annual GitHub fetch for NZ public holidays |
 | Does it work offline? | Yes — except syncing new activities |
 
 ---

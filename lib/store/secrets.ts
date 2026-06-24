@@ -8,9 +8,8 @@ import 'server-only';
  *   macOS   : Keychain
  *   Linux   : libsecret (gnome-keyring / kwallet)
  *
- * If keytar isn't available (rare — Linux without libsecret), we fall back
- * to an encrypted file in the data dir. The encryption key derives from a
- * machine-specific seed so the file isn't useful if copied off the machine.
+ * If keytar isn't available, writes throw and reads return null. There is
+ * no file-based fallback — secrets only live in the OS keychain.
  *
  * Secrets are NEVER persisted to:
  *   - the SQLite database

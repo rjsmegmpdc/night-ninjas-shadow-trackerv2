@@ -37,7 +37,7 @@ export default function HelpPage() {
         </SectionHeading>
         <Card className="space-y-4 text-bone-dim leading-relaxed">
           <p>
-            Shadow Tracker pulls your training data from Strava and compares it
+            VELOCITY pulls your training data from Strava and compares it
             against a real plan — Hansons, Lydiard, or one you build yourself.
             It doesn't just show you what you did. It tells you what you were
             <em className="text-bone"> meant </em>
@@ -80,7 +80,7 @@ export default function HelpPage() {
               ['Patrol', 'this week\u2019s training', 'The main dashboard. Your current week — sessions, paces, compliance flags. The screen you check daily.'],
               ['Mission', 'a planned session', 'One scheduled workout. Tuesday\u2019s tempo, Sunday\u2019s long run, etc.'],
               ['Recon', 'weekly report', 'Compliance trends. Did you hit the prescribed paces? Are you under-volume? Is intensity drifting?'],
-              ['Strike', 'best week analysis', 'Your top training weeks ranked. Useful for spotting what works for your body and what your real ceiling is.'],
+              ['Strike', 'peak training weeks', 'Your top training weeks ranked by volume, intensity, and consistency. Useful for spotting the athlete state when you felt strongest — and reproducing it.'],
               ['Dojo', 'training plan', 'The training method behind your plan. Eight available — Hansons, Daniels, Pfitzinger, Higdon, Lydiard, Polarised (80/20), Ultra, and Custom. Each defines its own week structure, pace zones, taper schedule, and how it responds to your calendar.'],
               ['Calendar', 'races + life', 'Where you set goals, group runs, and tell the app about holidays, work trips, and other life stuff.'],
               ['Journal', 'wellness log', 'Daily sleep, stress, and energy tracking. The instrumentation that explains why you broke down at 85km last time.'],
@@ -114,7 +114,7 @@ export default function HelpPage() {
             surfaces patterns from the data — three observations max,
             terse, signal-only, no motivational fluff.
           </ScreenCard>
-          <ScreenCard name="Strike" tagline="best week analysis">
+          <ScreenCard name="Strike" tagline="peak training weeks">
             Your top training weeks ranked by a composite of volume, intensity,
             consistency, and long-run achieved. Useful when you're wondering
             "what was I doing when I felt strong?" Also surfaces PBs and lets
@@ -243,8 +243,8 @@ export default function HelpPage() {
 
           <TaskCard title="An activity got synced wrong">
             <p>
-              If you renamed or edited an activity on Strava after Shadow
-              Tracker pulled it, trigger an incremental sync from Settings →
+              If you renamed or edited an activity on Strava after VELOCITY
+              pulled it, trigger an incremental sync from Settings →
               "Sync now". The runner upserts based on Strava activity ID, so
               the existing row will update with the new values.
             </p>
@@ -291,7 +291,7 @@ export default function HelpPage() {
         </SectionHeading>
         <Card className="space-y-4 text-bone-dim leading-relaxed">
           <p>
-            Shadow Tracker is local-first. Your activity history and plan data
+            VELOCITY is local-first. Your activity history and plan data
             stay on this machine. There is no cloud sync, no analytics, no
             telemetry, no account.
           </p>
@@ -320,9 +320,11 @@ export default function HelpPage() {
           </ul>
           <p>
             <strong className="text-bone">What goes over the network:</strong>{' '}
-            only direct calls to <Code>strava.com</Code> for OAuth and activity
-            sync, plus one annual fetch of NZ public holidays from a public
-            GitHub repo. That's it. No analytics. No phoning home.
+            direct calls to <Code>strava.com</Code> for OAuth and activity sync;
+            <Code>anthropic.com</Code> if you enable AI insights (BYOK — your key, your calls);
+            <Code>connect.garmin.com</Code> if you connect Garmin;
+            one annual fetch of NZ public holidays from a public GitHub repo.
+            No analytics. No phoning home.
           </p>
           <p>
             <strong className="text-bone">Usage logging:</strong> a local file
@@ -373,7 +375,7 @@ export default function HelpPage() {
             <p>
               Strava's data is the source of truth. If the activity looks wrong
               in Patrol, check it on Strava first. If Strava is right but
-              Shadow Tracker is wrong, trigger an incremental sync from
+              VELOCITY is wrong, trigger an incremental sync from
               Settings — the upsert will replace the row.
             </p>
             <p>

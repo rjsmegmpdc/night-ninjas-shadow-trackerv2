@@ -112,7 +112,7 @@ export async function createIncrementalJob(): Promise<SyncJob> {
     .get();
 
   const cursorAfter = newest
-    ? Math.floor(new Date(newest.startDateUtc).getTime() / 1000)
+    ? Math.floor(new Date(newest.startDateUtc).getTime() / 1000) + 1
     : Math.floor(Date.now() / 1000) - NINETY_DAYS_SECONDS;
 
   return createJob({
@@ -320,19 +320,35 @@ async function upsertActivity(row: ReturnType<typeof mapStravaActivity>): Promis
  * killed, network drop, etc) that should be marked 'paused' so the UI can
  * offer a resume button.
  *
+ * Also reaps 'pending' jobs older than 2 minutes — these are fire-and-forget
+ * jobs where the process exited before runJob() could transition them to
+ * 'running'. They can never be resumed (no cursor), so they're marked failed.
+ *
  * Called on every page render of /calendar and /patrol — cheap (one query
  * with a status index) and self-healing.
  */
 export async function detectInterruptedJobs(): Promise<void> {
   const db = getDb();
-  const cutoff = new Date(Date.now() - 60 * 1000);
+  const staleCutoff = new Date(Date.now() - 60 * 1000);
+  const pendingCutoff = new Date(Date.now() - 2 * 60 * 1000);
+
   await db
     .update(schema.syncJobs)
     .set({ status: 'paused' })
     .where(
       and(
         eq(schema.syncJobs.status, 'running'),
-        sql`${schema.syncJobs.lastHeartbeatAt} < ${Math.floor(cutoff.getTime() / 1000)}`
+        sql`${schema.syncJobs.lastHeartbeatAt} < ${Math.floor(staleCutoff.getTime() / 1000)}`
+      )
+    );
+
+  await db
+    .update(schema.syncJobs)
+    .set({ status: 'failed', errorMessage: 'Job never started — process exited before sync began.' })
+    .where(
+      and(
+        eq(schema.syncJobs.status, 'pending'),
+        sql`${schema.syncJobs.lastHeartbeatAt} < ${Math.floor(pendingCutoff.getTime() / 1000)}`
       )
     );
 }

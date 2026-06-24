@@ -24,7 +24,7 @@ export default function SetupLayout({
       {/* Footer — utility only */}
       <footer className="border-t border-ink-line">
         <div className="max-w-5xl mx-auto px-8 py-4 flex items-center justify-between text-bone-mute font-mono text-xs">
-          <span>shadow tracker · v0.1.0 · local-only</span>
+          <span>VELOCITY · v0.1.0 · local-only</span>
           <span>nightninjas · est. 2016</span>
         </div>
       </footer>

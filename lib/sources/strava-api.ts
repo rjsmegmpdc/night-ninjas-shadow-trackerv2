@@ -109,7 +109,11 @@ export async function fetchActivityPage(opts: {
     throw new Error(`Strava API ${res.status} ${res.statusText}: ${body.slice(0, 200)}`);
   }
 
-  const activities = (await res.json()) as StravaActivity[];
+  const raw = (await res.json()) as Array<Record<string, unknown>>;
+  const activities = raw.filter(
+    (a): a is StravaActivity =>
+      typeof a.start_date === 'string' && a.start_date.length > 0
+  );
   return {
     activities,
     rateLimit: { usage, limit, fifteenMinPercent },

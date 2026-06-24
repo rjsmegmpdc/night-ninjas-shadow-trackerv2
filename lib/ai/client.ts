@@ -53,7 +53,8 @@ export async function callModel(
     };
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : String(err);
-    return { ok: false, error: msg };
+    const safe = msg.replace(/sk-ant-[A-Za-z0-9_-]+/g, '[key redacted]');
+    return { ok: false, error: safe };
   }
 }
 
