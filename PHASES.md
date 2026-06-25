@@ -383,6 +383,28 @@ Plus: `/setup` (7-step first-run wizard) · `/api/*` (Strava OAuth + sync endpoi
 
 ---
 
+### Phase 19 — CWC long-running agent harness
+**What**: Adopted patterns from `anthropics/cwc-long-running-agents` to make agent sessions resumable, steerable, and self-checkpointing.
+
+**Files added**:
+- `CLAUDE.md` — project contract with startup/stop ritual, operator controls quick reference, key invariants summary
+- `PROGRESS.md` — session handoff doc; agent reads it at start of every session to resume context
+- `.claude/hooks/kill-switch.sh/.ps1` — PreToolUse hook: blocks all tool calls when `AGENT_STOP` sentinel file exists in project root
+- `.claude/hooks/steer.sh/.ps1` — PreToolUse hook: reads `STEER.md` once and injects as a blocking instruction, then clears it
+- `.claude/hooks/commit-on-stop.ps1` — Stop hook: checkpoints uncommitted work as `session checkpoint: <timestamp>` on the active `feat/` branch
+- `.claude/agents/evaluator.md` — fresh-context quality gate agent; reads PHASES.md + PROGRESS.md + git diff, runs tests, checks invariants, emits PASS or NEEDS_WORK
+
+**Operator controls**:
+- Emergency halt: `New-Item AGENT_STOP` → all tool calls blocked instantly
+- Mid-run steering: `Set-Content STEER.md "instruction"` → agent receives once, clears it
+- Session checkpoint: happens automatically on Stop hook
+
+**Deferred**: `commit-on-stop.sh` (Bash variant) and `.claude/settings.json` (hook wiring) pending explicit authorization.
+
+**Status**: Complete (PS1 hooks + evaluator + CLAUDE.md + PROGRESS.md committed; .sh + settings.json pending authorization).
+
+---
+
 ## Next phase candidates
 
 | Item | Priority | Description |

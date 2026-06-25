@@ -382,6 +382,30 @@ These properties are enforced by the test suite:
 
 ---
 
+## Operator controls (agent harness)
+
+`.claude/` directory implements CWC long-running agent patterns (Apache-2.0, `anthropics/cwc-long-running-agents`).
+
+```
+.claude/
+├── hooks/
+│   ├── kill-switch.sh/.ps1    # PreToolUse — blocks all calls when AGENT_STOP file present
+│   ├── steer.sh/.ps1          # PreToolUse — reads STEER.md, fires once, clears it
+│   └── commit-on-stop.ps1     # Stop — checkpoints uncommitted work on feat/* branch
+├── agents/
+│   └── evaluator.md           # Fresh-context quality gate agent definition
+└── settings.json              # Hook wiring (pending explicit authorization)
+```
+
+| Control | How to trigger |
+|---|---|
+| Emergency halt | `New-Item AGENT_STOP` — remove to resume |
+| Mid-run steer | `Set-Content STEER.md "instruction"` — fires once, auto-clears |
+| Session handoff | Read `PROGRESS.md` at session start; update before stop |
+| Quality gate | Spawn `.claude/agents/evaluator.md` after significant changes |
+
+---
+
 ## Technology stack
 
 | Layer | Technology | Version |
