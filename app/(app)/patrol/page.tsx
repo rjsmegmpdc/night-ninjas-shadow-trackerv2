@@ -63,6 +63,11 @@ import { SessionContentButton } from '@/components/patrol/session-content-button
 import { LongRunFuelingCard } from '@/components/patrol/long-run-fueling-card';
 import { OrientationBanner } from '@/components/patrol/orientation-banner';
 import { getPatrolOrientationDismissed } from '@/lib/store/settings';
+import { WeeklyReportHero } from '@/components/patrol/weekly-report-hero';
+import {
+  generateWeeklyReportIfDue,
+  getPersistedWeeklyReport,
+} from '@/lib/actions/weekly-report';
 
 /**
  * Patrol — this week's training loop.
@@ -109,6 +114,12 @@ export default async function PatrolPage() {
 }
 
 async function PatrolDashboard() {
+  // Weekly report: try to generate if due, fall back to last persisted snapshot.
+  // Non-critical — generateWeeklyReportIfDue swallows all errors and returns null.
+  const weeklyReport =
+    (await generateWeeklyReportIfDue()) ??
+    (await getPersistedWeeklyReport());
+
   const activePlan = await getActivePlan();
 
   if (!activePlan) {
@@ -275,6 +286,9 @@ async function PatrolDashboard() {
 
   return (
     <>
+      {/* Weekly report hero — rendered first when report exists or as prompt */}
+      <WeeklyReportHero report={weeklyReport} />
+
       {/* Header — compact title strip with streak counter + sync on right */}
       <header className="space-y-4 border-b border-ink-line pb-5">
         <div className="flex items-start justify-between gap-4">

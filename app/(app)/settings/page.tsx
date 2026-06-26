@@ -1,9 +1,9 @@
 import Link from 'next/link';
 import { Card, CardLabel } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Settings as SettingsIcon, Activity, Database, Trash2, Download, RotateCcw, Footprints, Flame, Calendar } from 'lucide-react';
+import { Settings as SettingsIcon, Activity, Database, Trash2, Download, RotateCcw, Footprints, Flame, Calendar, BarChart2 } from 'lucide-react';
 import { logPageView } from '@/lib/store/instrument';
-import { getStravaClientId, getLastSyncAt, getUserTimezone, getStreakRunEverydayMode, getFirstDayOfWeek, getClubParkrunId, getClubWindowDefault, getClubTermsAcceptedAt, getClubLastShareGeneratedAt, getGarminSyncEnabled, getGarminLastSyncAt, getCoachMode, getAiModel } from '@/lib/store/settings';
+import { getStravaClientId, getLastSyncAt, getUserTimezone, getStreakRunEverydayMode, getFirstDayOfWeek, getClubParkrunId, getClubWindowDefault, getClubTermsAcceptedAt, getClubLastShareGeneratedAt, getGarminSyncEnabled, getGarminLastSyncAt, getCoachMode, getAiModel, getWeeklyReportEnabled, getWeeklyReportDay } from '@/lib/store/settings';
 import { getStravaTokens, getAnthropicApiKey } from '@/lib/store/secrets';
 import { listRecentJobs } from '@/lib/sources/sync-runner';
 import { getDataStats } from '@/lib/actions/settings-admin';
@@ -11,6 +11,7 @@ import { countActivitiesNeedingBackfill } from '@/lib/shoes/backfill';
 import { GearBackfillButton } from '@/components/settings/gear-backfill-button';
 import { StreakModeToggle } from '@/components/settings/streak-mode-toggle';
 import { FirstDayOfWeekToggle } from '@/components/settings/first-day-of-week-toggle';
+import { WeeklyReportToggle } from '@/components/settings/weekly-report-toggle';
 import { ClubShareSection } from '@/components/club-share/club-share-section';
 import { CoachModeToggle } from '@/components/settings/coach-mode-toggle';
 import { GarminSection } from '@/components/garmin/garmin-section';
@@ -60,6 +61,8 @@ export default async function SettingsPage() {
     garminLastSyncAt,
     anthropicKey,
     aiModel,
+    weeklyReportEnabled,
+    weeklyReportDay,
   ] = await Promise.all([
     getStravaClientId(),
     getLastSyncAt(),
@@ -78,6 +81,8 @@ export default async function SettingsPage() {
     getGarminLastSyncAt(),
     getAnthropicApiKey(),
     getAiModel(),
+    getWeeklyReportEnabled(),
+    getWeeklyReportDay(),
   ]);
 
   const stravaConnected = clientId != null && tokens != null;
@@ -339,6 +344,31 @@ export default async function SettingsPage() {
           <p className="font-mono text-[10px] text-bone-mute leading-relaxed pt-2 border-t border-ink-line">
             ↳ streak refreshes after each Strava sync. miss day = yesterday had
             no qualifying activity. today is excluded (still in progress).
+          </p>
+        </Card>
+      </section>
+
+      {/* Weekly Report -------------------------------------------------- */}
+      <section id="weekly-report" className="space-y-3 scroll-mt-8">
+        <SectionHeading icon={BarChart2} label="weekly report">
+          Weekly Report
+        </SectionHeading>
+
+        <Card className="space-y-4">
+          <CardLabel>patrol summary</CardLabel>
+          <p className="text-bone-dim text-sm leading-relaxed">
+            Receive a weekly compliance summary on your chosen day.
+            When enabled, Patrol generates a snapshot of the week — every
+            session, volume vs. target, and whether the long run landed —
+            each time you open Patrol on or after your chosen day.
+          </p>
+          <WeeklyReportToggle
+            initialEnabled={weeklyReportEnabled}
+            initialDow={weeklyReportDay as 0 | 1 | 2 | 3 | 4 | 5 | 6}
+          />
+          <p className="font-mono text-[10px] text-bone-mute leading-relaxed pt-2 border-t border-ink-line">
+            ↳ the summary persists until next week — you&apos;ll see last week&apos;s
+            report on every Patrol visit, not just on the day it generates.
           </p>
         </Card>
       </section>
