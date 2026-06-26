@@ -18,7 +18,7 @@ interface Props {
 }
 
 export function ShoeRecommendationCard({ recommendation, sessionType }: Props) {
-  const sessionLabel = SESSION_LABEL[sessionType] ?? 'today's session';
+  const sessionLabel = SESSION_LABEL[sessionType] ?? "today's session";
   const pctLeft = 100 - recommendation.pctUsed;
 
   return (
