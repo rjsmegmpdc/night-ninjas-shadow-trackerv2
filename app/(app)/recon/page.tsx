@@ -78,7 +78,7 @@ export default async function ReconPage() {
           </p>
           <p className="text-bone-dim text-sm leading-relaxed">
             Keep training and check back here in a few weeks. Until then,
-            <Link href="/patrol" className="text-accent hover:text-accent-hover transition-colors"> Patrol </Link>
+            <Link href="/patrol" className="text-accent hover:text-accent-hover transition-colors"> Dashboard </Link>
             shows compliance for the current week.
           </p>
         </Card>

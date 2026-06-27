@@ -27,17 +27,17 @@ export function OrientationBanner() {
       <div className="text-bone-dim text-sm leading-relaxed space-y-2 max-w-2xl">
         <p>
           <strong className="text-bone">Each morning:</strong> open{' '}
-          <span className="font-display tracking-wide-display uppercase text-accent">Patrol</span>{' '}
-          — this screen. See your prescribed sessions, what you actually did, and any compliance flags.
+          <a href="/patrol" className="font-display tracking-wide-display uppercase text-accent hover:underline">Dashboard</a>{' '}
+          — this screen. See your prescribed sessions, what you actually ran, and any compliance flags.
         </p>
         <p>
           <strong className="text-bone">Each Sunday:</strong> open{' '}
-          <span className="font-display tracking-wide-display uppercase text-accent">Recon</span>{' '}
+          <a href="/recon" className="font-display tracking-wide-display uppercase text-accent hover:underline">Analytics</a>{' '}
           — your weekly review. Volume trend, session hit rate, and patterns across the last 12 weeks.
         </p>
         <p>
           <strong className="text-bone">When life happens:</strong> open{' '}
-          <span className="font-display tracking-wide-display uppercase text-accent">Calendar</span>{' '}
+          <a href="/calendar" className="font-display tracking-wide-display uppercase text-accent hover:underline">Calendar</a>{' '}
           — add a commitment (holiday, injury, busy week). The plan engine adapts targets so missed
           sessions show as adjusted, not failures.
         </p>

@@ -355,12 +355,12 @@ export default async function SettingsPage() {
         </SectionHeading>
 
         <Card className="space-y-4">
-          <CardLabel>patrol summary</CardLabel>
+          <CardLabel>dashboard summary</CardLabel>
           <p className="text-bone-dim text-sm leading-relaxed">
             Receive a weekly compliance summary on your chosen day.
-            When enabled, Patrol generates a snapshot of the week — every
+            When enabled, the Dashboard generates a snapshot of the week — every
             session, volume vs. target, and whether the long run landed —
-            each time you open Patrol on or after your chosen day.
+            each time you open the Dashboard on or after your chosen day.
           </p>
           <WeeklyReportToggle
             initialEnabled={weeklyReportEnabled}
@@ -368,7 +368,7 @@ export default async function SettingsPage() {
           />
           <p className="font-mono text-[10px] text-bone-mute leading-relaxed pt-2 border-t border-ink-line">
             ↳ the summary persists until next week — you&apos;ll see last week&apos;s
-            report on every Patrol visit, not just on the day it generates.
+            report on every Dashboard visit, not just on the day it generates.
           </p>
         </Card>
       </section>

@@ -64,6 +64,7 @@ import { LongRunFuelingCard } from '@/components/patrol/long-run-fueling-card';
 import { OrientationBanner } from '@/components/patrol/orientation-banner';
 import { getPatrolOrientationDismissed, getWeeklyReportEnabled } from '@/lib/store/settings';
 import { WeeklyReportHero } from '@/components/patrol/weekly-report-hero';
+import { WeekComplianceBlock } from '@/components/patrol/week-compliance-block';
 import {
   generateWeeklyReportIfDue,
   getPersistedWeeklyReport,
@@ -97,9 +98,9 @@ export default async function PatrolPage() {
       {!hasData && (
         <>
           <EmptyState
-            label="patrol · no data yet"
+            label="dashboard · no data yet"
             title="No activities synced"
-            reason="Patrol shows your current week — sessions, paces, compliance flags. To see anything here, you need to pull your activity history from Strava first."
+            reason="The Dashboard shows your current week — sessions, paces, compliance flags. To see anything here, pull your activity history from Strava first."
             action={{ href: '/setup/sync', label: 'Run initial sync' }}
           />
           <p className="font-mono text-xs text-bone-mute max-w-2xl">
@@ -140,10 +141,10 @@ async function PatrolDashboard() {
     if (!goalRace) {
       return (
         <EmptyState
-          label="patrol · no goal race"
+          label="dashboard · no goal race"
           title="No goal race set"
-          reason="Patrol needs a goal race to know what you're training for. Pick a dojo and add a goal race in the wizard."
-          action={{ href: '/setup/dojo', label: 'Configure plan' }}
+          reason="The Dashboard needs a goal race to know what you're training for. Set up your Training method and add a goal race in the wizard."
+          action={{ href: '/setup/dojo', label: 'Configure training' }}
         />
       );
     }
@@ -151,9 +152,9 @@ async function PatrolDashboard() {
     if (!goalRace.targetTimeS) {
       return (
         <EmptyState
-          label="patrol · target time missing"
+          label="dashboard · target time missing"
           title="Target time needed"
-          reason={`Your goal race (${goalRace.name}) doesn't have a target time set. Pace zones — easy, tempo, interval — are derived from goal pace, so the plan engine can't run without it. Add a target time on the Calendar page and Patrol will activate.`}
+          reason={`Your goal race (${goalRace.name}) doesn't have a target time set. Pace zones — easy, tempo, interval — are derived from goal pace, so the plan engine can't run without it. Add a target time on the Calendar page and the Dashboard will activate.`}
           action={{ href: '/calendar', label: 'Set target time' }}
         />
       );
@@ -163,10 +164,10 @@ async function PatrolDashboard() {
     // cover what getActivePlan() blocks on
     return (
       <EmptyState
-        label="patrol · plan not configured"
-        title="Plan not set up yet"
-        reason="Patrol compares your activities against a plan. Configuration is incomplete — pick a dojo and set a goal race with a target time to see compliance."
-        action={{ href: '/setup/dojo', label: 'Configure plan' }}
+        label="dashboard · plan not configured"
+        title="Training not set up yet"
+        reason="The Dashboard compares your activities against a plan. Configuration is incomplete — choose a training method and set a goal race with a target time to see compliance."
+        action={{ href: '/setup/dojo', label: 'Configure training' }}
       />
     );
   }
@@ -290,72 +291,52 @@ async function PatrolDashboard() {
 
   return (
     <>
-      {/* Weekly report hero — only rendered when the feature is enabled */}
-      {weeklyReportEnabled && <WeeklyReportHero report={weeklyReport} />}
+      {/* ── HERO: compliance + calendar matrix ─────────────────────────── */}
 
-      {/* Header — compact title strip with streak counter + sync on right */}
-      <header className="space-y-4 border-b border-ink-line pb-5">
+      {/* Compact header strip */}
+      <header className="space-y-3 border-b border-ink-line pb-5">
         <div className="flex items-start justify-between gap-4">
           <div className="space-y-1">
-            <span className="nn-caps">dashboard - this week</span>
+            <span className="nn-caps">dashboard · this week</span>
             <h1 className="font-display tracking-wide-display text-4xl uppercase leading-none">
               {programPhase.kind === 'pre-program' ? (
-                <>
-                  Pre-program <span className="text-accent">base</span>
-                </>
+                <>Pre-program <span className="text-accent">base</span></>
               ) : programPhase.kind === 'taper' ? (
-                <>
-                  Taper - <span className="text-accent">week {programPhase.programWeekNumber} of {programPhase.programWeeks}</span>
-                </>
+                <>Taper · <span className="text-accent">week {programPhase.programWeekNumber} of {programPhase.programWeeks}</span></>
               ) : programPhase.kind === 'race-week' ? (
-                <>
-                  Race <span className="text-accent">week</span>
-                </>
+                <>Race <span className="text-accent">week</span></>
               ) : programPhase.kind === 'post-race' ? (
-                <>
-                  Post-race <span className="text-accent">recovery</span>
-                </>
+                <>Post-race <span className="text-accent">recovery</span></>
               ) : programPhase.kind === 'no-program' ? (
                 <>No program</>
               ) : (
-                <>
-                  Week {weekNumber} - <span className="text-accent">{template.phaseName} Phase</span>
-                </>
+                <>Week {weekNumber} · <span className="text-accent">{template.phaseName} phase</span></>
               )}
             </h1>
             <div className="font-mono text-bone-dim text-xs">
               {formatRange(startIso, endIso)} · {programPhase.subline}
             </div>
           </div>
-
-          {/* Right cluster: state chips + compliance + streak + sync button */}
-          <div className="flex items-center gap-2 flex-shrink-0 flex-wrap justify-end">
-            <FreshnessChip state={athleteState} />
-            <IntensityChip distribution={intensityDist} />
-            <WeekComplianceChip compliance={compliance} />
-            <WeekAdherenceChip days={compliance.days} todayDow={todayDow} />
+          <div className="flex items-center gap-2 flex-shrink-0">
             <StreakCounter />
             <SyncButton />
           </div>
         </div>
 
-        {/* Compact race row + book-a-race CTA */}
         <div className="flex items-center justify-between flex-wrap gap-3">
           <RaceCountdown />
           <div className="flex items-center gap-2">
             <Link
-              href="/race"
+              href="/calendar"
               className="inline-flex items-center gap-1.5 font-display tracking-wide-display uppercase text-xs text-bone-mute hover:text-accent transition-colors border border-ink-line hover:border-accent px-2.5 py-1"
-              title="Race execution plan - pacing, fuelling, carb-load"
             >
-              Race plan →
+              Calendar →
             </Link>
             <Link
-              href="/calendar#tune-ups"
+              href="/race"
               className="inline-flex items-center gap-1.5 font-display tracking-wide-display uppercase text-xs text-bone-mute hover:text-accent transition-colors border border-ink-line hover:border-accent px-2.5 py-1"
-              title="Book a race on Calendar"
             >
-              + Book a race
+              Race plan →
             </Link>
           </div>
         </div>
@@ -365,10 +346,7 @@ async function PatrolDashboard() {
             {template.adaptations.map((a, i) => (
               <span
                 key={i}
-                className={
-                  'inline-flex items-center gap-1.5 px-2 py-1 border text-[10px] font-mono uppercase tracking-widest ' +
-                  adaptationStyle(a.kind)
-                }
+                className={'inline-flex items-center gap-1.5 px-2 py-1 border text-[10px] font-mono uppercase tracking-widest ' + adaptationStyle(a.kind)}
                 title={a.detail}
               >
                 {a.label}
@@ -378,114 +356,129 @@ async function PatrolDashboard() {
         )}
       </header>
 
-      {/* Phase 4 - active injury / illness / travel indicator */}
-      <InterruptionIndicator active={interruptions.active} />
+      {/* Promoted compliance status block */}
+      <WeekComplianceBlock compliance={compliance} />
 
-      {/* Phase 3b - coach proposal / auto-adjustment notice */}
-      <CoachAdjustmentCard
-        adjustmentId={coach.adjustmentId}
-        status={coach.status}
-        rail={coach.rail}
-        trigger={coach.trigger}
-        rationale={coach.rationale}
-        changes={coach.changes}
-        rawTotalKm={coach.rawTotalKm}
-        adjustedTotalKm={coach.adjustedTotalKm}
-        injuryPaused={coach.injuryPaused}
-      />
+      {/* Program matrix — dominant hero element */}
+      <ProgramMatrix activePlan={activePlan} />
 
-      {/* NS-2/NS-3 - Norwegian Singles discipline guardrails */}
-      {nsReport && <NsGuardrailsCard report={nsReport} />}
+      {/* ── TONIGHT'S MISSION ──────────────────────────────────────────── */}
+      <Card className="border-accent/40 space-y-4">
+        <CardLabel className="text-accent">tonight&apos;s mission</CardLabel>
+        {tonightSession ? (
+          <>
+            <div>
+              <div className="font-display tracking-wide-display text-2xl uppercase mb-1">
+                {tonightSession.label}
+              </div>
+              <div className="font-mono text-bone-dim text-sm">
+                {sessionPrescription(tonightSession)}
+              </div>
+            </div>
+            {tonightSession.notes && (
+              <div className="font-mono text-xs text-bone-dim leading-relaxed">
+                {tonightSession.notes}
+              </div>
+            )}
+            {todayRunSpk != null && paceVerdict !== 'unknown' && (
+              <div className="flex items-center gap-2 pt-1 border-t border-ink-line/50">
+                <span className="font-mono text-[10px] text-bone-mute uppercase tracking-widest">
+                  today&apos;s run
+                </span>
+                <span className="font-mono text-sm text-bone tabular-nums">
+                  {todayRunKm != null ? `${todayRunKm.toFixed(1)} km · ` : ''}
+                  {formatSpk(todayRunSpk)}/km
+                </span>
+                <span className={'font-mono text-[10px] uppercase tracking-widest ' + (paceVerdict === 'on-target' ? 'text-signal-ok' : paceVerdict === 'too-fast' ? 'text-signal-warn' : 'text-bone-mute')}>
+                  {paceVerdict === 'on-target' ? '✓ ' : paceVerdict === 'too-fast' ? '⚡ ' : '↓ '}
+                  {verdictLabel(paceVerdict)}
+                </span>
+              </div>
+            )}
+            {(tonightSession.type === 'cross' || tonightSession.type === 'strength') && (
+              <SessionContentButton
+                sessionType={tonightSession.type}
+                durationMin={tonightSession.durationMinMax ?? null}
+                hasKey={hasAiKey}
+              />
+            )}
+          </>
+        ) : (
+          <div className="text-bone-dim text-sm">Rest day. Recover.</div>
+        )}
+      </Card>
 
-      {/* Phase 9 - coach voice: pre-written messages triggered by plan position */}
-      <CoachVoiceCard messages={coachMessages} />
-
-      {/* Top stats row — live. Above matrix so the eye lands on
-          this-week numbers first. Width matches the matrix below. */}
+      {/* ── WEEK STATS ─────────────────────────────────────────────────── */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-ink-line border border-ink-line">
         <div className="bg-ink p-6">
-          <Stat
-            label="this week"
-            value={stats.totalKm > 0 ? stats.totalKm.toFixed(1) : '0.0'}
-            unit="km"
-            size="lg"
-            accent={stats.totalKm > 0}
-          />
-          <div className="font-mono text-xs text-bone-mute mt-2">
-            target {template.totalKmTarget} · {volumePct}%
-          </div>
+          <Stat label="this week" value={stats.totalKm > 0 ? stats.totalKm.toFixed(1) : '0.0'} unit="km" size="lg" accent={stats.totalKm > 0} />
+          <div className="font-mono text-xs text-bone-mute mt-2">target {template.totalKmTarget} · {volumePct}%</div>
         </div>
         <div className="bg-ink p-6">
-          <Stat
-            label="long run"
-            value={stats.longRunKm > 0 ? stats.longRunKm.toFixed(1) : '0.0'}
-            unit="km"
-            size="lg"
-          />
-          <div className="font-mono text-xs text-bone-mute mt-2">
-            target {template.longRunKmTarget} · {longLabel(stats.longRunKm, template.longRunKmTarget, longPct)}
-          </div>
+          <Stat label="long run" value={stats.longRunKm > 0 ? stats.longRunKm.toFixed(1) : '0.0'} unit="km" size="lg" />
+          <div className="font-mono text-xs text-bone-mute mt-2">target {template.longRunKmTarget} · {longLabel(stats.longRunKm, template.longRunKmTarget, longPct)}</div>
         </div>
         <div className="bg-ink p-6">
-          <Stat
-            label="avg pace"
-            value={stats.avgPaceSpk ? formatSpk(stats.avgPaceSpk) : '—:—'}
-            unit="/km"
-            size="lg"
-          />
-          <div className="font-mono text-xs text-bone-mute mt-2">
-            {stats.totalSessions} session{stats.totalSessions === 1 ? '' : 's'} this week
-          </div>
+          <Stat label="avg pace" value={stats.avgPaceSpk ? formatSpk(stats.avgPaceSpk) : '—:—'} unit="/km" size="lg" />
+          <div className="font-mono text-xs text-bone-mute mt-2">{stats.totalSessions} session{stats.totalSessions === 1 ? '' : 's'} this week</div>
         </div>
         <div className="bg-ink p-6">
-          <Stat
-            label="avg HR"
-            value={stats.avgHr ? Math.round(stats.avgHr).toString() : '—'}
-            unit="bpm"
-            size="lg"
-          />
-          <div className="font-mono text-xs text-bone-mute mt-2">
-            {stats.avgHr ? 'weighted by time' : 'no HR data'}
-          </div>
+          <Stat label="avg HR" value={stats.avgHr ? Math.round(stats.avgHr).toString() : '—'} unit="bpm" size="lg" />
+          <div className="font-mono text-xs text-bone-mute mt-2">{stats.avgHr ? 'weighted by time' : 'no HR data'}</div>
         </div>
       </div>
 
-      {/* Program matrix — coach's-spreadsheet view of the training block */}
-      <ProgramMatrix activePlan={activePlan} />
+      {/* ── COACHING DETAIL (collapsed by default) ─────────────────────── */}
+      <details className="group border-t border-ink-line pt-6 mt-2">
+        <summary className="cursor-pointer select-none font-mono text-sm text-bone-mute hover:text-bone transition-colors flex items-center gap-2 list-none mb-6">
+          <span className="group-open:hidden">▸</span>
+          <span className="hidden group-open:inline">▾</span>
+          Show coaching detail
+        </summary>
 
-      {/* Progression flags - render only when caution/risk thresholds crossed.
-          Stays silent during normal training weeks. */}
-      <ProgressionFlagCard mileage={mileageProg} longRun={longRunCheck} />
+        <div className="space-y-8">
+          {/* Active interruption indicator */}
+          <InterruptionIndicator active={interruptions.active} />
 
-      {/* Ramp card - visible only during pre-program base.
-          Shows the gap between current chronic load and program entry
-          expectation, with state-aware verdict. */}
-      <RampCard ramp={rampPlan} />
+          {/* Coach adjustment proposal */}
+          <CoachAdjustmentCard
+            adjustmentId={coach.adjustmentId}
+            status={coach.status}
+            rail={coach.rail}
+            trigger={coach.trigger}
+            rationale={coach.rationale}
+            changes={coach.changes}
+            rawTotalKm={coach.rawTotalKm}
+            adjustedTotalKm={coach.adjustedTotalKm}
+            injuryPaused={coach.injuryPaused}
+          />
 
-      {/* Two-column body */}
-      <div className="grid lg:grid-cols-[3fr_2fr] gap-8">
-        {/* Sessions */}
-        <Card className="space-y-5">
-          <div className="flex items-center justify-between">
-            <CardLabel>session compliance</CardLabel>
-            <span className="font-mono text-xs text-bone-mute">
-              {compliance.daysWithSessions} of {template.days.filter((d) => d.sessions.some((s) => s.type !== 'rest')).length} logged
-            </span>
-          </div>
-          <div className="divide-y divide-ink-line">
-            {compliance.days.map((day) => {
-              const sessionsToShow = day.sessions.filter((s) => s.target.type !== 'rest');
-              if (sessionsToShow.length === 0) return null;
-              return sessionsToShow.map((sess, i) => (
-                <ComplianceRow key={`${day.dow}-${i}`} dow={day.dow} sess={sess} />
-              ));
-            })}
-          </div>
-        </Card>
+          {/* Norwegian Singles discipline guardrails */}
+          {nsReport && <NsGuardrailsCard report={nsReport} />}
 
-        {/* Side column — wellness + next mission */}
-        <div className="space-y-5">
-          {/* Wellness card — log injuries / illness / travel on the Journal page */}
+          {/* Coach voice messages */}
+          <CoachVoiceCard messages={coachMessages} />
+
+          {/* Session compliance breakdown */}
+          <Card className="space-y-5">
+            <div className="flex items-center justify-between">
+              <CardLabel>session compliance</CardLabel>
+              <span className="font-mono text-xs text-bone-mute">
+                {compliance.daysWithSessions} of {template.days.filter((d) => d.sessions.some((s) => s.type !== 'rest')).length} logged
+              </span>
+            </div>
+            <div className="divide-y divide-ink-line">
+              {compliance.days.map((day) => {
+                const sessionsToShow = day.sessions.filter((s) => s.target.type !== 'rest');
+                if (sessionsToShow.length === 0) return null;
+                return sessionsToShow.map((sess, i) => (
+                  <ComplianceRow key={`${day.dow}-${i}`} dow={day.dow} sess={sess} />
+                ));
+              })}
+            </div>
+          </Card>
+
+          {/* Wellness / interruptions */}
           <Card className="space-y-4">
             <CardLabel>wellness · interruptions</CardLabel>
             <div className="font-mono text-xs text-bone-mute leading-relaxed">
@@ -494,119 +487,59 @@ async function PatrolDashboard() {
                 : '↳ no active interruptions. Log an injury, illness, or travel break on the Journal page so the plan and risk read stay honest.'}
             </div>
             <Link href="/journal">
-              <span className="font-mono text-xs text-bone-dim hover:text-accent transition-colors">
-                Open Journal →
-              </span>
+              <span className="font-mono text-xs text-bone-dim hover:text-accent transition-colors">Open Journal →</span>
             </Link>
           </Card>
 
-          {/* Tonight's mission — derived from today's plan */}
-          <Card className="border-accent/40 space-y-4">
-            <CardLabel className="text-accent">
-              tonight's mission
-            </CardLabel>
-            {tonightSession ? (
-              <>
-                <div>
-                  <div className="font-display tracking-wide-display text-2xl uppercase mb-1">
-                    {tonightSession.label}
-                  </div>
-                  <div className="font-mono text-bone-dim text-sm">
-                    {sessionPrescription(tonightSession)}
-                  </div>
-                </div>
-                {tonightSession.notes && (
-                  <div className="font-mono text-xs text-bone-dim leading-relaxed">
-                    {tonightSession.notes}
-                  </div>
-                )}
-                {/* Phase 15 — today's run vs prescribed zone */}
-                {todayRunSpk != null && paceVerdict !== 'unknown' && (
-                  <div className="flex items-center gap-2 pt-1 border-t border-ink-line/50">
-                    <span className="font-mono text-[10px] text-bone-mute uppercase tracking-widest">
-                      today&apos;s run
-                    </span>
-                    <span className="font-mono text-sm text-bone tabular-nums">
-                      {todayRunKm != null ? `${todayRunKm.toFixed(1)} km · ` : ''}
-                      {formatSpk(todayRunSpk)}/km
-                    </span>
-                    <span
-                      className={
-                        'font-mono text-[10px] uppercase tracking-widest ' +
-                        (paceVerdict === 'on-target'
-                          ? 'text-signal-ok'
-                          : paceVerdict === 'too-fast'
-                            ? 'text-signal-warn'
-                            : 'text-bone-mute')
-                      }
-                    >
-                      {paceVerdict === 'on-target' ? '✓ ' : paceVerdict === 'too-fast' ? '⚡ ' : '↓ '}
-                      {verdictLabel(paceVerdict)}
-                    </span>
-                  </div>
-                )}
+          {/* Progression flags */}
+          <ProgressionFlagCard mileage={mileageProg} longRun={longRunCheck} />
 
-                {/* Phase 10 — session content generator for cross/strength days */}
-                {(tonightSession.type === 'cross' || tonightSession.type === 'strength') && (
-                  <SessionContentButton
-                    sessionType={tonightSession.type}
-                    durationMin={tonightSession.durationMinMax ?? null}
-                    hasKey={hasAiKey}
-                  />
-                )}
-              </>
-            ) : (
-              <div className="text-bone-dim text-sm">
-                Rest day. Recover.
-              </div>
-            )}
-          </Card>
+          {/* Ramp card (pre-program only) */}
+          <RampCard ramp={rampPlan} />
 
-          {/* Phase 11 — shoe recommendation for today's session */}
+          {/* Shoe recommendation */}
           {shoeRecommendation && tonightSession && (
-            <ShoeRecommendationCard
-              recommendation={shoeRecommendation}
-              sessionType={tonightSession.type}
+            <ShoeRecommendationCard recommendation={shoeRecommendation} sessionType={tonightSession.type} />
+          )}
+
+          {/* Long-run fueling guide */}
+          {tonightSession?.type === 'long' && (() => {
+            const durationMin = tonightSession.durationMinMax ?? (tonightSession.distanceKmMax != null ? Math.round(tonightSession.distanceKmMax * 6.0) : null);
+            return durationMin != null ? <LongRunFuelingCard durationMin={durationMin} /> : null;
+          })()}
+
+          {/* Sunday reflection (Sundays only) */}
+          {todayDow === 6 && <SundayReflectionCard date={todayIso} existing={todayJournal} />}
+
+          {/* Block-end debrief (final 2 weeks) */}
+          {showBlockDebrief && activePeriod?.id != null && (
+            <BlockDebriefCard
+              planPeriodId={activePeriod.id}
+              weekNumber={weekNumber}
+              programWeeks={programWeeks}
+              existing={existingBlockDebrief}
             />
           )}
 
-          {/* Phase 13 — long-run fueling guide */}
-          {tonightSession?.type === 'long' && (() => {
-            const durationMin =
-              tonightSession.durationMinMax ??
-              (tonightSession.distanceKmMax != null
-                ? Math.round(tonightSession.distanceKmMax * 6.0)
-                : null);
-            return durationMin != null ? (
-              <LongRunFuelingCard durationMin={durationMin} />
-            ) : null;
-          })()}
+          {/* Shoe nudge banners */}
+          <ShoeNudgeBanner />
+
+          {/* AI daily briefing */}
+          <DailyBriefingCard hasKey={hasAiKey} modelLabel={MODELS[aiModel].label} />
+
+          {/* Weekly report (if enabled) */}
+          {weeklyReportEnabled && <WeeklyReportHero report={weeklyReport} />}
+
+          {/* Freshness + intensity chips (moved from header) */}
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="font-mono text-xs text-bone-mute">Athlete state:</span>
+            <FreshnessChip state={athleteState} />
+            <IntensityChip distribution={intensityDist} />
+            <WeekComplianceChip compliance={compliance} />
+            <WeekAdherenceChip days={compliance.days} todayDow={todayDow} />
+          </div>
         </div>
-      </div>
-
-      {/* Phase 9 - Sunday reflection prompt (Sundays only) */}
-      {todayDow === 6 && (
-        <SundayReflectionCard
-          date={todayIso}
-          existing={todayJournal}
-        />
-      )}
-
-      {/* Phase 9 - block-end debrief (final 2 weeks of block) */}
-      {showBlockDebrief && activePeriod?.id != null && (
-        <BlockDebriefCard
-          planPeriodId={activePeriod.id}
-          weekNumber={weekNumber}
-          programWeeks={programWeeks}
-          existing={existingBlockDebrief}
-        />
-      )}
-
-      {/* Demoted shoe nudges — useful but no longer part of the hero */}
-      <ShoeNudgeBanner />
-
-      {/* Phase 10 — AI coach daily briefing (on-demand) */}
-      <DailyBriefingCard hasKey={hasAiKey} modelLabel={MODELS[aiModel].label} />
+      </details>
     </>
   );
 }

@@ -1,4 +1,4 @@
-import { Card, CardLabel } from '@/components/ui/card';
+﻿import { Card, CardLabel } from '@/components/ui/card';
 import {
   Compass,
   BookOpen,
@@ -65,21 +65,21 @@ export default function HelpPage() {
             to do, what you actually did, and where the gaps are.
           </p>
           <p>
-            The job each week is simple: open <Term>Patrol</Term> and see if
+            The job each week is simple: open <Term>Dashboard</Term> and see if
             your week is on track. If it isn't, that's information, not
             judgement. Did you ride the pace too fast on Tuesday? Skip
             Thursday's tempo? Cut the long run short? The app tells you.
             What you do with that is up to you.
           </p>
           <p>
-            Patrol pulls real data — your actual activities are compared
+            The Dashboard pulls real data — your actual activities are compared
             against the plan engine's prescribed sessions for the current
             week. Wellness markers (sleep, stress, energy) are coming next;
-            for now Patrol shows the heart rate and pace trends as your
+            for now the Dashboard shows the heart rate and pace trends as your
             best signal.
           </p>
           <p className="text-bone">
-            Once a week, open <Term>Recon</Term>. Look at the trends. If you've
+            Once a week, open <Term>Analytics</Term>. Look at the trends. If you've
             been missing the same session three weeks running, something needs
             adjusting — either your plan or your life.
           </p>
@@ -94,11 +94,11 @@ export default function HelpPage() {
         <Card className="space-y-3">
           <GlossaryTable
             rows={[
-              ['Patrol', 'this week\u2019s training', 'The main dashboard. Your current week — sessions, paces, compliance flags. The screen you check daily.'],
+              ['Dashboard', 'this week’s training', 'The main screen. Your current week — sessions, paces, compliance flags. The screen you check daily.'],
               ['Mission', 'a planned session', 'One scheduled workout. Tuesday\u2019s tempo, Sunday\u2019s long run, etc.'],
-              ['Recon', 'weekly report', 'Compliance trends. Did you hit the prescribed paces? Are you under-volume? Is intensity drifting?'],
+              ['Analytics', 'weekly report', 'Compliance trends. Did you hit the prescribed paces? Are you under-volume? Is intensity drifting?'],
               ['Strike', 'peak training weeks', 'Your top training weeks ranked by volume, intensity, and consistency. Useful for spotting what you were doing when you felt strongest — and repeating it.'],
-              ['Dojo', 'training plan', 'The training method behind your plan. Eight available — Hansons, Daniels, Pfitzinger, Higdon, Lydiard, Polarised (80/20), Ultra, and Custom. Each defines its own week structure, pace zones, taper schedule, and how it responds to your calendar.'],
+              ['Training', 'training method', 'The training method behind your plan. Nine available — Hansons, Norwegian Singles, Daniels, Pfitzinger, Higdon, Lydiard, Polarised (80/20), Ultra, and Custom. Each defines its own week structure, pace zones, taper schedule, and how it responds to your calendar.'],
               ['Calendar', 'races + life', 'Where you set goals, group runs, and tell the app about holidays, work trips, and other life stuff.'],
               ['Journal', 'wellness log', 'Daily sleep, stress, and energy tracking. The instrumentation that explains why you broke down at 85km last time.'],
               ['Shadow', 'unassigned activity', 'A run that didn\u2019t match any prescribed session. Not bad — just unplanned.'],
@@ -114,14 +114,15 @@ export default function HelpPage() {
           What each screen is for
         </SectionHeading>
         <div className="space-y-3">
-          <ScreenCard name="Patrol" tagline="this week's training">
+          <ScreenCard name="Dashboard" tagline="this week's training">
             Your daily-use screen. Shows the current week's prescribed sessions,
             what you actually did, and a compliance flag for each one. The big
-            stat at the top is volume vs target. The "Tonight's Mission" card
-            tells you what's prescribed for today. If you check one screen each
-            morning, this is it.
+            number at the top is compliance — the calendar matrix shows the full
+            training block at a glance. The "Tonight's Mission" card tells you
+            what's prescribed for today. If you check one screen each morning,
+            this is it.
           </ScreenCard>
-          <ScreenCard name="Recon" tagline="weekly compliance">
+          <ScreenCard name="Analytics" tagline="weekly compliance">
             The Sunday-night screen. Three big numbers at the top — total km,
             compliance %, long-run consistency — each compared against the
             previous 12 weeks so you can see direction. Below that, a
@@ -137,8 +138,8 @@ export default function HelpPage() {
             "what was I doing when I felt strong?" Also surfaces PBs and lets
             you compare a current build vs a previous one.
           </ScreenCard>
-          <ScreenCard name="Dojo" tagline="your plan">
-            View and edit your active training plan. Pace zones, weekly
+          <ScreenCard name="Training" tagline="your plan">
+            View and switch your active training method. Pace zones, weekly
             structure, volume caps. If you're on Hansons but want to swap
             to Lydiard, this is where you do it.
           </ScreenCard>
@@ -223,7 +224,7 @@ export default function HelpPage() {
               add a Commitment (Calendar → Commitments). The engine scales
               targets accordingly — "Reduced training" halves volume, "Travel
               only" keeps short easy runs and removes long runs, "No training"
-              blanks the whole week. Your Patrol header will show what got
+              blanks the whole week. Your Dashboard header will show what got
               adapted.
             </p>
             <p>
@@ -252,7 +253,7 @@ export default function HelpPage() {
             <p>
               When the dev server crashes, your computer sleeps, or the network
               drops mid-sync, the job is left in a paused state. Next time you
-              open Patrol or Calendar, you'll see a banner at the top:
+              open the Dashboard or Calendar, you'll see a banner at the top:
               <em className="text-bone"> Sync paused — resume?</em> Click
               Resume. The job picks up where it left off.
             </p>
@@ -329,7 +330,7 @@ export default function HelpPage() {
         </SectionHeading>
         <Card className="space-y-4">
           <p className="text-bone-dim text-sm leading-relaxed">
-            On Patrol and Recon, each session gets a flag. It's a quick
+            On the Dashboard and Analytics, each session gets a flag. It's a quick
             visual signal. Don't take any single flag too seriously — patterns
             across weeks matter more than one bad day.
           </p>
@@ -432,7 +433,7 @@ export default function HelpPage() {
           <TaskCard title="A session shows wrong pace or distance">
             <p>
               Strava's data is the source of truth. If the activity looks wrong
-              in Patrol, check it on Strava first. If Strava is right but
+              in the Dashboard, check it on Strava first. If Strava is right but
               VELOCITY is wrong, trigger an incremental sync from
               Settings — the upsert will replace the row.
             </p>

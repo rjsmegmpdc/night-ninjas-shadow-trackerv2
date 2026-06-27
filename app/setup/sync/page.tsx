@@ -74,7 +74,7 @@ export default async function SyncPage({
               ↳ once complete, you can pull deeper history from the Settings page
             </div>
             <Link href="/patrol">
-              <Button variant="primary" size="md">Continue to Patrol →</Button>
+              <Button variant="primary" size="md">Continue to Dashboard →</Button>
             </Link>
           </div>
         </Card>

@@ -10,12 +10,14 @@ import { cn } from '@/lib/utils';
 /**
  * TopNav - VELOCITY's primary navigation.
  *
- * Replaces the previous 9-item left sidebar with a 4-item horizontal top
- * navigation. Per BRAND.md, the four buckets are:
+ * Replaces the previous 9-item left sidebar with a horizontal top
+ * navigation. Buckets:
  *
  *   Dashboard   -> /patrol            (this week's view)
- *   Training    -> /dojo, /calendar   (planning surfaces)
+ *   Training    -> /dojo, /race       (planning surfaces)
+ *   Calendar    -> /calendar          (schedule + events)
  *   Analytics   -> /strike, /recon    (state + trends)
+ *   Club        -> /club
  *   Profile     -> /settings, /help, /shoes, /journal (config + reference)
  *
  * The top-level nav lights up based on which sub-route is active. Inside
@@ -33,7 +35,8 @@ interface NavBucket {
 
 const NAV: NavBucket[] = [
   { label: 'Dashboard', href: '/patrol',   match: ['/patrol'] },
-  { label: 'Training',  href: '/dojo',     match: ['/dojo', '/calendar', '/race'] },
+  { label: 'Training',  href: '/dojo',     match: ['/dojo', '/race'] },
+  { label: 'Calendar',  href: '/calendar', match: ['/calendar'] },
   { label: 'Analytics', href: '/strike',   match: ['/strike', '/recon', '/vo2max', '/coach-log'] },
   { label: 'Club',      href: '/club',     match: ['/club'] },
   { label: 'Profile',   href: '/profile',  match: ['/profile', '/settings', '/help', '/shoes', '/journal'] },
