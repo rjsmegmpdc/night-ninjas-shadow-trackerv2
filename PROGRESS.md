@@ -1,4 +1,44 @@
 ## Branch
+feat/ns-engine-ics-alignment
+
+## Session: 2026-06-28 (NS engine ICS alignment)
+
+### Completed
+- `lib/plans/norwegian-singles.ts` — full rewrite to match ICS plan (ns-marathon-plan.ics):
+  - `defaultProgramWeeks: 20` (was 18), `defaultLongRunCapKm: 34` (was 26), `status: 'full'` (was 'scaffold')
+  - ICS-exact long run progression via LONG_KM table (wks 1-20): 16→18→20→22→24→22(down)→28→30→32→26(down)→32→34→28+6MP→30+8MP→32+10MP→Devonport→30+12MP→32+12MP→18+5MP→Race
+  - MP finish embedded in long run label + notes for wks 13-15, 17-19
+  - Phase-accurate sub-T session labels: Base Early=20×400m/6×5min/4×8min; Base Mid=24×400m/7×5min/5×8min; Specificity=20×400m/6×5min+MP/4×8min; Taper 1=12×400m/4×5min+MP; Taper 2=6×400m sharpener/shakeouts/race
+  - Phase names: Transition/Base/Specificity/Taper
+  - VOLUME_SCALE capped at 1.0 max (weeklyVolumeCapKm is a hard ceiling)
+- 3 engine snapshots updated (intentional — engine output changed by design)
+- All 588 tests pass. Evaluator: PASS.
+
+### In progress
+- Nothing
+
+### Blocked
+- Pre-existing TS errors in lib/ai/client.ts, lib/sources/strava-api.ts, lib/ai/fueling.ts — not from this branch.
+
+### Next session should
+- Merge feat/framework-metrics (framework-specific stat rows — completed, evaluator PASS)
+- Merge feat/ns-engine-ics-alignment (this branch)
+- Update PHASES.md test count: 472 → 588
+- Dev server smoke test: confirm framework stats visible on Dashboard (never visually confirmed)
+- Audio for Night Ninjas ads (lower priority, deferred)
+
+## Key decisions made
+- Option 1 (align engine to ICS) over DB import or JSON overrides — cleanest single code path for solo app
+- VOLUME_SCALE max 1.0 — cap is a hard ceiling, not a peak target
+
+## Files changed this session
+- lib/plans/norwegian-singles.ts (full rewrite)
+- lib/plans/__snapshots__/engine-snapshot.test.ts.snap (3 NS snapshots updated)
+- PROGRESS.md (this file)
+
+---
+
+## Branch
 feat/framework-metrics
 
 ## Session: 2026-06-28
