@@ -64,8 +64,8 @@ export function TopNav({ streakCount }: { streakCount?: number | null }) {
                 className={cn(
                   'relative px-4 py-2 rounded-lg font-sans text-sm transition-colors duration-150',
                   active
-                    ? 'text-accent'
-                    : 'text-bone-dim hover:text-bone'
+                    ? 'text-accent bg-accent/10 shadow-[inset_0_1px_0_0_rgba(255,95,0,0.15)]'
+                    : 'text-bone-dim hover:text-bone hover:bg-ink-panel'
                 )}
               >
                 {item.label}

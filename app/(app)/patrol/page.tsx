@@ -64,7 +64,7 @@ import { LongRunFuelingCard } from '@/components/patrol/long-run-fueling-card';
 import { OrientationBanner } from '@/components/patrol/orientation-banner';
 import { getPatrolOrientationDismissed, getWeeklyReportEnabled } from '@/lib/store/settings';
 import { WeeklyReportHero } from '@/components/patrol/weekly-report-hero';
-import { WeekComplianceBlock } from '@/components/patrol/week-compliance-block';
+import { ComplianceBar } from '@/components/patrol/compliance-bar';
 import { FrameworkStatRow } from '@/components/patrol/framework-stat-row';
 import { getFrameworkStats } from '@/lib/analysis/framework-stats';
 import { resolveVo2, type Vo2Source } from '@/lib/analysis/vo2max-pure';
@@ -339,7 +339,10 @@ async function PatrolDashboard() {
 
   return (
     <>
-      {/* ── HERO: compliance + calendar matrix ─────────────────────────── */}
+      {/* ── COMPLIANCE BAR: sticky under nav ───────────────────────────── */}
+      <ComplianceBar compliance={compliance} />
+
+      {/* ── HERO: week context header ──────────────────────────────────── */}
 
       {/* Compact header strip */}
       <header className="space-y-3 border-b border-ink-line pb-5">
@@ -404,20 +407,6 @@ async function PatrolDashboard() {
         )}
       </header>
 
-      {/* Mid-program entry banner — shown once when joining mid-block */}
-      {showMidEntryBanner && midEntryAssessment && activePeriod?.id != null && (
-        <MidEntryBanner assessment={midEntryAssessment} periodId={activePeriod.id} />
-      )}
-
-      {/* Quick-log strip — compact one-line bar for injury / sick / away */}
-      <QuickLogStrip />
-
-      {/* Promoted compliance status block */}
-      <WeekComplianceBlock compliance={compliance} />
-
-      {/* Program matrix — dominant hero element */}
-      <ProgramMatrix activePlan={activePlan} />
-
       {/* ── TONIGHT'S MISSION ──────────────────────────────────────────── */}
       <Card className="border-accent/40 space-y-4">
         <CardLabel className="text-accent">tonight&apos;s mission</CardLabel>
@@ -464,11 +453,22 @@ async function PatrolDashboard() {
         )}
       </Card>
 
+      {/* Program matrix — dominant hero element */}
+      <ProgramMatrix activePlan={activePlan} />
+
+      {/* Mid-program entry banner — shown once when joining mid-block */}
+      {showMidEntryBanner && midEntryAssessment && activePeriod?.id != null && (
+        <MidEntryBanner assessment={midEntryAssessment} periodId={activePeriod.id} />
+      )}
+
+      {/* Quick-log strip — compact one-line bar for injury / sick / away */}
+      <QuickLogStrip />
+
       {/* ── FRAMEWORK STATS ────────────────────────────────────────────── */}
       <FrameworkStatRow stats={frameworkStats} />
 
       {/* ── COACHING DETAIL (collapsed by default) ─────────────────────── */}
-      <details className="group border-t border-ink-line pt-6 mt-2">
+      <details id="coaching-detail" className="group border-t border-ink-line pt-6 mt-2">
         <summary className="cursor-pointer select-none font-mono text-sm text-bone-mute hover:text-bone transition-colors flex items-center gap-2 list-none mb-6">
           <span className="group-open:hidden">▸</span>
           <span className="hidden group-open:inline">▾</span>
@@ -499,7 +499,7 @@ async function PatrolDashboard() {
           <CoachVoiceCard messages={coachMessages} />
 
           {/* Session compliance breakdown */}
-          <Card className="space-y-5">
+          <Card id="session-compliance" className="space-y-5">
             <div className="flex items-center justify-between">
               <CardLabel>session compliance</CardLabel>
               <span className="font-mono text-xs text-bone-mute">
