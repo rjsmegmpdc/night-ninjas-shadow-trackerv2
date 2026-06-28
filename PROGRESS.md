@@ -1,5 +1,5 @@
 ## Branch
-feat/theme-switcher (ready to merge)
+main (clean — feat/theme-switcher merged)
 
 ## Session: 2026-06-28
 

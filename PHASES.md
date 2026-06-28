@@ -2,10 +2,10 @@
 
 ## Current state
 
-**Version**: 0.2.24  
+**Version**: 0.2.25  
 **Branch**: main (clean)  
 **Test coverage**: 33 test files · 609 tests · all passing  
-**Status**: Phase 24 complete. Setup wizard redesigned with Strava-first flow, visual Strava registration guide, and new Life Events primer step.
+**Status**: Phase 25 complete. 4-scheme color switcher (Ninja / Daybreak / Midnight / Light) available under Settings → Display.
 
 ---
 
@@ -539,6 +539,34 @@ Plus: `/setup` (7-step first-run wizard: Welcome → Strava → Connect → Sync
 - OAuth callback redirect was missed during page-level nav updates — evaluator caught it before merge
 
 **Test count**: 609 (no new tests — all UI/routing changes)  
+**Status**: Complete.
+
+---
+
+### Phase 25 — Color Scheme Switcher
+**What**: 4 named color schemes selectable under Settings → Display. CSS custom properties drive all token overrides; a no-flash inline script applies the stored scheme before React hydrates to prevent FOUC. Default is Ninja (brand dark).
+
+**Themes**:
+| Name | Key | Background | Accent | Designed for |
+|---|---|---|---|---|
+| Ninja | `ninja` | #0A0A0A | #FF5F00 | Default — brand dark |
+| Daybreak | `daybreak` | #FBF8F1 | #E2521A | Warm paper, morning / outdoor |
+| Midnight | `midnight` | #080B12 | #4FA8FF | Cool blue-black, late-night |
+| Light | `light` | #F5F1E8 | #FF5F00 | Standard paper-bone light |
+
+**Key files**:
+- `app/globals.css` — `html[data-theme="daybreak"]` and `html[data-theme="midnight"]` blocks added; `html[data-theme="light"]` block fixed (5 missing tokens added for full parity across all 4 themes)
+- `components/theme/theme-provider.tsx` — full rewrite: `ColorScheme = 'ninja' | 'daybreak' | 'midnight' | 'light'`; removed system-pref resolution; `NO_FLASH_SCRIPT` validates against 4 scheme names; default `ninja`; context exports `{ scheme, setScheme }`
+- `components/theme/theme-toggle.tsx` — updated to use `ColorScheme` API; cycles Ninja→Daybreak→Midnight→Light; icons Moon/Sunset/SunMedium/Sun
+- `components/theme/theme-switcher.tsx` — **new** client component; 4-option card grid with 3-dot color swatch previews (bg / accent / text), active state (accent border + ✓ active)
+- `app/(app)/settings/page.tsx` — `ThemeSwitcher` added to Display section above `FirstDayOfWeekToggle`; `Palette` icon imported for section label
+
+**Key decisions**:
+- Ninja is the explicit default — system-pref resolution removed; one clear choice per user stored in localStorage under `nn-theme`
+- `data-theme` attribute on `<html>` drives all styling — no JS class manipulation; themes activate instantly via CSS custom property cascade
+- `color-scheme: light/dark` set explicitly per theme block so browser chrome (scrollbars, form controls) matches the palette
+
+**Test count**: 609 (no new tests — all UI/theme changes)  
 **Status**: Complete.
 
 ---
