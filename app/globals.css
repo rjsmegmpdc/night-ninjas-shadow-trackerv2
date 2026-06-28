@@ -83,6 +83,79 @@
     /* Matrix session-type colours — deeper for paper-bone contrast */
     --nn-matrix-long: #2563EB;
     --nn-matrix-strength: #1E3A8A;
+
+    /* Token parity additions */
+    --nn-ink-line-bold: #B5A88E;
+    --nn-accent-glow: rgba(255, 95, 0, 0.12);
+    --nn-accent-faint: rgba(255, 95, 0, 0.06);
+    --nn-selection-bg: var(--nn-accent);
+    --nn-selection-fg: #FFFFFF;
+  }
+
+  /* -------------------------------------------------------------------------
+   * Daybreak — warm paper palette for morning and outdoor use.
+   * Accent: #E2521A (deepened orange — AA readable on warm paper).
+   * ------------------------------------------------------------------------- */
+  html[data-theme="daybreak"] {
+    color-scheme: light;
+
+    --nn-ink: #FBF8F1;
+    --nn-ink-shadow: #F1ECE0;
+    --nn-ink-panel: #E6DFCF;
+    --nn-ink-line: #D2C9B4;
+    --nn-ink-line-bold: #B8AD93;
+
+    --nn-bone: #1E1B16;
+    --nn-bone-dim: #544E43;
+    --nn-bone-mute: #857D6E;
+
+    --nn-accent: #E2521A;
+    --nn-accent-hover: #C44216;
+    --nn-accent-glow: rgba(226, 82, 26, 0.18);
+    --nn-accent-faint: rgba(226, 82, 26, 0.08);
+
+    --nn-signal-ok: #16A34A;
+    --nn-signal-warn: #CA8A04;
+    --nn-signal-miss: #DC2626;
+
+    --nn-matrix-long: #E2521A;
+    --nn-matrix-strength: #6D28D9;
+
+    --nn-selection-bg: var(--nn-accent);
+    --nn-selection-fg: #FFFFFF;
+  }
+
+  /* -------------------------------------------------------------------------
+   * Midnight — cool blue-black for late-night review and low-fatigue use.
+   * Accent: #4FA8FF (calm blue — restful at night, distinct from Ninja orange).
+   * ------------------------------------------------------------------------- */
+  html[data-theme="midnight"] {
+    color-scheme: dark;
+
+    --nn-ink: #080B12;
+    --nn-ink-shadow: #0E131D;
+    --nn-ink-panel: #161D2A;
+    --nn-ink-line: #222B3A;
+    --nn-ink-line-bold: #324054;
+
+    --nn-bone: #E4E9F2;
+    --nn-bone-dim: #94A0B5;
+    --nn-bone-mute: #5C6678;
+
+    --nn-accent: #4FA8FF;
+    --nn-accent-hover: #7BBEFF;
+    --nn-accent-glow: rgba(79, 168, 255, 0.18);
+    --nn-accent-faint: rgba(79, 168, 255, 0.08);
+
+    --nn-signal-ok: #26D0AE;
+    --nn-signal-warn: #EAB308;
+    --nn-signal-miss: #EF4444;
+
+    --nn-matrix-long: #4FA8FF;
+    --nn-matrix-strength: #A78BFA;
+
+    --nn-selection-bg: var(--nn-accent);
+    --nn-selection-fg: #080B12;
   }
 
   html {

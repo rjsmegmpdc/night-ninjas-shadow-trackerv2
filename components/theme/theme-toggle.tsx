@@ -1,70 +1,45 @@
 'use client';
 
-import { Sun, Moon, Monitor } from 'lucide-react';
-import { useTheme, type ThemePreference } from './theme-provider';
+import { Sun, Moon, Sunset, SunMedium } from 'lucide-react';
+import { useTheme, type ColorScheme } from './theme-provider';
 import { useState, useEffect } from 'react';
 
-/**
- * ThemeToggle — cycles through System → Light → Dark → System.
- *
- * Sits at the bottom of the sidebar next to the Feedback button.
- * Shows the icon for the *currently selected preference* (not the
- * applied theme), so the user can see what they've chosen even when
- * 'system' resolves to dark on a dark-mode OS.
- *
- * Tooltip shows the current preference and what it cycles to.
- */
+const ORDER: ColorScheme[] = ['ninja', 'daybreak', 'midnight', 'light'];
+
+const META: Record<ColorScheme, { label: string; next: string; Icon: React.ElementType }> = {
+  ninja:    { label: 'Ninja',    next: 'Daybreak', Icon: Moon },
+  daybreak: { label: 'Daybreak', next: 'Midnight', Icon: Sunset },
+  midnight: { label: 'Midnight', next: 'Light',    Icon: SunMedium },
+  light:    { label: 'Light',    next: 'Ninja',    Icon: Sun },
+};
+
 export function ThemeToggle() {
-  const { preference, setPreference } = useTheme();
+  const { scheme, setScheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
-  // Avoid hydration mismatch — render a neutral placeholder until mounted
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  useEffect(() => { setMounted(true); }, []);
 
   const cycle = () => {
-    const order: ThemePreference[] = ['system', 'light', 'dark'];
-    const idx = order.indexOf(preference);
-    const next = order[(idx + 1) % order.length];
-    setPreference(next);
+    const idx = ORDER.indexOf(scheme);
+    setScheme(ORDER[(idx + 1) % ORDER.length]);
   };
 
-  const Icon =
-    preference === 'system' ? Monitor :
-    preference === 'light' ? Sun :
-    Moon;
-
-  const label =
-    preference === 'system' ? 'System' :
-    preference === 'light' ? 'Light' :
-    'Dark';
-
-  const nextLabel =
-    preference === 'system' ? 'Light' :
-    preference === 'light' ? 'Dark' :
-    'System';
-
   if (!mounted) {
-    // Pre-hydration placeholder — same dimensions, no icon to avoid flash
     return (
-      <button
-        className="p-2 text-bone-mute"
-        aria-label="Theme toggle"
-        type="button"
-        disabled
-      >
-        <Monitor size={16} strokeWidth={1.5} />
+      <button className="p-2 text-bone-mute" aria-label="Theme toggle" type="button" disabled>
+        <Moon size={16} strokeWidth={1.5} />
       </button>
     );
   }
+
+  const { label, next, Icon } = META[scheme];
 
   return (
     <button
       type="button"
       onClick={cycle}
       className="p-2 text-bone-mute hover:text-bone transition-colors"
-      title={`Theme: ${label} (click for ${nextLabel})`}
+      title={`Theme: ${label} (click for ${next})`}
       aria-label={`Theme: ${label}`}
     >
       <Icon size={16} strokeWidth={1.5} />

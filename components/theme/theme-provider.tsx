@@ -3,75 +3,54 @@
 import { createContext, useContext, useEffect, useState, useCallback } from 'react';
 
 /**
- * Theme system — tri-state: System / Light / Dark.
+ * Theme system — 4 named color schemes.
  *
- * The "applied" theme is what data-theme actually shows: derived from
- * preference + (if system) the OS prefers-color-scheme.
+ * Each scheme maps directly to a data-theme value on <html>, which activates
+ * the matching CSS variable block in globals.css.
  *
  * No-flash strategy: a small inline script in the root layout reads
  * localStorage BEFORE React hydrates and sets data-theme on <html>. This
  * provider takes over after hydration to handle changes.
  *
- * localStorage key: 'nn-theme' = 'system' | 'light' | 'dark'
+ * localStorage key: 'nn-theme' = 'ninja' | 'daybreak' | 'midnight' | 'light'
+ * Default: 'ninja'
  */
 
-export type ThemePreference = 'system' | 'light' | 'dark';
-export type AppliedTheme = 'light' | 'dark';
+export type ColorScheme = 'ninja' | 'daybreak' | 'midnight' | 'light';
 
-interface ThemeContextValue {
-  preference: ThemePreference;
-  applied: AppliedTheme;
-  setPreference: (p: ThemePreference) => void;
-}
+export const SCHEMES: ColorScheme[] = ['ninja', 'daybreak', 'midnight', 'light'];
 
 const STORAGE_KEY = 'nn-theme';
+const DEFAULT_SCHEME: ColorScheme = 'ninja';
+
+interface ThemeContextValue {
+  scheme: ColorScheme;
+  setScheme: (s: ColorScheme) => void;
+}
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
-function resolveApplied(pref: ThemePreference): AppliedTheme {
-  if (pref === 'system') {
-    if (typeof window === 'undefined') return 'dark';
-    return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
-  }
-  return pref;
+function coerce(v: string | null): ColorScheme {
+  if (v === 'ninja' || v === 'daybreak' || v === 'midnight' || v === 'light') return v;
+  return DEFAULT_SCHEME;
 }
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [preference, setPreferenceState] = useState<ThemePreference>('system');
+  const [scheme, setSchemeState] = useState<ColorScheme>(DEFAULT_SCHEME);
 
-  // On mount, hydrate from localStorage (the inline script has already
-  // applied the right data-theme attribute, so we just sync state)
   useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY) as ThemePreference | null;
-    if (stored === 'system' || stored === 'light' || stored === 'dark') {
-      setPreferenceState(stored);
-    }
+    const stored = localStorage.getItem(STORAGE_KEY);
+    setSchemeState(coerce(stored));
   }, []);
 
-  // Watch system pref if user has 'system' selected
-  useEffect(() => {
-    if (preference !== 'system') return;
-    const media = window.matchMedia('(prefers-color-scheme: light)');
-    const handler = () => {
-      const applied: AppliedTheme = media.matches ? 'light' : 'dark';
-      document.documentElement.setAttribute('data-theme', applied);
-    };
-    handler(); // apply on mount
-    media.addEventListener('change', handler);
-    return () => media.removeEventListener('change', handler);
-  }, [preference]);
-
-  const setPreference = useCallback((p: ThemePreference) => {
-    setPreferenceState(p);
-    localStorage.setItem(STORAGE_KEY, p);
-    const applied = resolveApplied(p);
-    document.documentElement.setAttribute('data-theme', applied);
+  const setScheme = useCallback((s: ColorScheme) => {
+    setSchemeState(s);
+    localStorage.setItem(STORAGE_KEY, s);
+    document.documentElement.setAttribute('data-theme', s);
   }, []);
-
-  const applied = resolveApplied(preference);
 
   return (
-    <ThemeContext.Provider value={{ preference, applied, setPreference }}>
+    <ThemeContext.Provider value={{ scheme, setScheme }}>
       {children}
     </ThemeContext.Provider>
   );
@@ -80,11 +59,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 export function useTheme() {
   const ctx = useContext(ThemeContext);
   if (!ctx) {
-    // Defensive fallback if used outside provider — degrades to dark default
     return {
-      preference: 'system' as ThemePreference,
-      applied: 'dark' as AppliedTheme,
-      setPreference: () => {},
+      scheme: DEFAULT_SCHEME as ColorScheme,
+      setScheme: () => {},
     };
   }
   return ctx;
@@ -92,8 +69,8 @@ export function useTheme() {
 
 /**
  * Inline script string that runs before React hydration to apply the
- * stored theme. Prevents FOUC (flash of wrong theme) by setting the
- * data-theme attribute synchronously.
+ * stored theme. Prevents FOUC (flash of wrong theme) by setting data-theme
+ * synchronously from localStorage.
  *
  * Embed via dangerouslySetInnerHTML in the root layout's <head>.
  */
@@ -101,12 +78,9 @@ export const NO_FLASH_SCRIPT = `
 (function() {
   try {
     var stored = localStorage.getItem('${STORAGE_KEY}');
-    var pref = (stored === 'light' || stored === 'dark' || stored === 'system') ? stored : 'system';
-    var applied = pref;
-    if (pref === 'system') {
-      applied = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
-    }
-    document.documentElement.setAttribute('data-theme', applied);
-  } catch (e) { /* ignore — defaults to dark via CSS */ }
+    var valid = ['ninja', 'daybreak', 'midnight', 'light'];
+    var scheme = (stored && valid.indexOf(stored) !== -1) ? stored : '${DEFAULT_SCHEME}';
+    document.documentElement.setAttribute('data-theme', scheme);
+  } catch (e) { /* defaults to Ninja via :root CSS */ }
 })();
 `.trim();

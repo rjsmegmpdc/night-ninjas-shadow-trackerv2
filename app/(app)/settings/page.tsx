@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Card, CardLabel } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Settings as SettingsIcon, Activity, Database, Trash2, Download, RotateCcw, Footprints, Flame, Calendar, BarChart2 } from 'lucide-react';
+import { Settings as SettingsIcon, Activity, Database, Trash2, Download, RotateCcw, Footprints, Flame, Calendar, BarChart2, Palette } from 'lucide-react';
 import { logPageView } from '@/lib/store/instrument';
 import { getStravaClientId, getLastSyncAt, getUserTimezone, getStreakRunEverydayMode, getFirstDayOfWeek, getClubParkrunId, getClubWindowDefault, getClubTermsAcceptedAt, getClubLastShareGeneratedAt, getGarminSyncEnabled, getGarminLastSyncAt, getCoachMode, getAiModel, getWeeklyReportEnabled, getWeeklyReportDay } from '@/lib/store/settings';
 import { getStravaTokens, getAnthropicApiKey } from '@/lib/store/secrets';
@@ -16,6 +16,7 @@ import { ClubShareSection } from '@/components/club-share/club-share-section';
 import { CoachModeToggle } from '@/components/settings/coach-mode-toggle';
 import { GarminSection } from '@/components/garmin/garmin-section';
 import { AiSection } from '@/components/settings/ai-section';
+import { ThemeSwitcher } from '@/components/theme/theme-switcher';
 import {
   startExtendedHistorySync,
   startIncrementalSync,
@@ -264,6 +265,18 @@ export default async function SettingsPage() {
         <SectionHeading icon={Calendar} label="display">
           Display
         </SectionHeading>
+
+        <Card className="space-y-4">
+          <CardLabel>
+            <Palette size={12} className="inline-block mr-1 -mt-0.5" />
+            color scheme
+          </CardLabel>
+          <p className="text-bone-dim text-sm leading-relaxed">
+            Choose the color scheme that works best for your environment and time of day.
+            Your preference is saved locally and applied on every visit.
+          </p>
+          <ThemeSwitcher />
+        </Card>
 
         <Card className="space-y-4">
           <CardLabel>first day of week</CardLabel>
