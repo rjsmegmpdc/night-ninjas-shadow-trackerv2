@@ -31,5 +31,5 @@ export async function selectDojo(formData: FormData) {
   revalidatePath('/patrol');
   revalidatePath('/calendar');
 
-  redirect('/setup/races?dojo=' + dojo);
+  redirect('/setup/life-events');
 }

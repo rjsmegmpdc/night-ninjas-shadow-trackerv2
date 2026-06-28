@@ -4,7 +4,7 @@ import { Card, CardLabel } from '@/components/ui/card';
 import { Stepper } from '@/components/ui/stepper';
 import { SyncProgress } from '@/components/sync/sync-progress';
 
-const STEPS = ['Welcome', 'Strava App', 'Connect', 'Dojo', 'Races', 'Weekly', 'Sync'];
+const STEPS = ['Welcome', 'Strava', 'Connect', 'Sync', 'Race', 'Plan', 'Life Events'];
 
 export default async function SyncPage({
   searchParams,
@@ -17,48 +17,42 @@ export default async function SyncPage({
 
   return (
     <div className="space-y-10">
-      <Stepper steps={STEPS} current={7} />
+      <Stepper steps={STEPS} current={4} />
 
       <div className="space-y-3">
-        <span className="nn-caps">step 07 — initial sync</span>
+        <span className="nn-caps">step 04 — initial sync</span>
         <h1 className="font-display tracking-wide-display text-5xl uppercase">
-          Pull your<br />history
+          Pull your<br />
+          <span className="text-accent">history</span>
         </h1>
         <p className="text-bone-dim max-w-2xl">
-          Shadow Tracker pulls your last 90 days from Strava as a meaningful
-          starting point. Once that completes, you can pull the full archive
-          from the Settings page when you're ready.
+          VELOCITY pulls your last 90 days from Strava. When it finishes, your
+          calendar matrix appears — 90 days of your real training on screen.
+          The full archive can be pulled from Settings any time after that.
         </p>
       </div>
 
       {!jobId && !error && (
         <Card className="space-y-6 max-w-xl">
-          <div>
-            <CardLabel>about the initial sync</CardLabel>
-          </div>
+          <CardLabel>about the initial sync</CardLabel>
           <ul className="space-y-3 text-bone-dim text-sm">
-            <li className="flex gap-3">
-              <span className="text-accent font-mono">▸</span>
-              <span>Pulls the last 90 days of activities — meaningful start position.</span>
-            </li>
-            <li className="flex gap-3">
-              <span className="text-accent font-mono">▸</span>
-              <span>Captures all activity types (runs, rides, swims, workouts, etc).</span>
-            </li>
-            <li className="flex gap-3">
-              <span className="text-accent font-mono">▸</span>
-              <span>Resumable — if interrupted by network drop or rate limit, pick up where you left off.</span>
-            </li>
-            <li className="flex gap-3">
-              <span className="text-accent font-mono">▸</span>
-              <span>Takes ~30 seconds for most users.</span>
-            </li>
+            {[
+              'Pulls the last 90 days — enough to show your training matrix immediately.',
+              'All activity types: runs, rides, swims, workouts, everything.',
+              'Resumable — safe to close and re-open if the network drops or rate limit kicks in.',
+              'Takes ~30 seconds for most users.',
+            ].map((line) => (
+              <li key={line} className="flex gap-3">
+                <span className="text-accent font-mono flex-shrink-0">▸</span>
+                <span>{line}</span>
+              </li>
+            ))}
           </ul>
 
           <form action="/api/strava/sync" method="POST" className="pt-2">
             <input type="hidden" name="full" value="true" />
             <Button variant="critical" size="lg" type="submit" className="w-full">
-              Begin Sync
+              Begin Sync — show me my matrix
             </Button>
           </form>
         </Card>
@@ -69,13 +63,18 @@ export default async function SyncPage({
           <CardLabel>live progress</CardLabel>
           <SyncProgress jobId={jobId} />
 
-          <div className="pt-4 border-t border-ink-line space-y-3">
+          <div className="pt-4 border-t border-ink-line space-y-4">
             <div className="font-mono text-xs text-bone-mute leading-relaxed">
-              ↳ once complete, you can pull deeper history from the Settings page
+              ↳ full archive available from Settings · race &amp; plan setup is optional — two more quick steps
             </div>
-            <Link href="/patrol">
-              <Button variant="primary" size="md">Continue to Dashboard →</Button>
-            </Link>
+            <div className="flex items-center gap-3 flex-wrap">
+              <Link href="/setup/races">
+                <Button variant="primary" size="md">Continue setup →</Button>
+              </Link>
+              <Link href="/patrol">
+                <Button variant="ghost" size="md">Skip to Dashboard</Button>
+              </Link>
+            </div>
           </div>
         </Card>
       )}
@@ -92,7 +91,7 @@ export default async function SyncPage({
       )}
 
       <div className="flex items-center justify-start">
-        <Link href="/setup/weekly">
+        <Link href="/setup/connect">
           <Button variant="ghost">← Back</Button>
         </Link>
       </div>

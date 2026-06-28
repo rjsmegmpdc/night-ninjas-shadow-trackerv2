@@ -4,7 +4,7 @@ import { Card, CardLabel } from '@/components/ui/card';
 import { Input, Label } from '@/components/ui/input';
 import { Stepper } from '@/components/ui/stepper';
 
-const STEPS = ['Welcome', 'Strava App', 'Connect', 'Dojo', 'Races', 'Weekly', 'Sync'];
+const STEPS = ['Welcome', 'Strava', 'Connect', 'Sync', 'Race', 'Plan', 'Life Events'];
 
 export default function ConnectPage() {
   return (
@@ -17,14 +17,15 @@ export default function ConnectPage() {
           Paste your<br />credentials
         </h1>
         <p className="text-bone-dim max-w-2xl">
-          From the Strava API page you just registered. Both fields are
-          stored locally — Client ID in the database, Client Secret in your
-          OS keychain.
+          From the Strava API page you just registered. Client ID goes in the
+          database; Client Secret is stored in your OS keychain and never
+          written to disk in plain text.
         </p>
       </div>
 
       <form action="/api/strava/auth" method="POST" className="space-y-6 max-w-xl">
         <Card className="space-y-5">
+          <CardLabel>strava api credentials</CardLabel>
           <div>
             <Label htmlFor="clientId">Client ID</Label>
             <Input
@@ -34,6 +35,9 @@ export default function ConnectPage() {
               placeholder="166708"
               autoComplete="off"
             />
+            <p className="text-bone-mute text-xs mt-1.5 font-mono">
+              ↳ the short number at the top of your Strava app
+            </p>
           </div>
           <div>
             <Label htmlFor="clientSecret">Client Secret</Label>
@@ -45,8 +49,8 @@ export default function ConnectPage() {
               placeholder="••••••••••••••••••••••••••••••••••••••••"
               autoComplete="off"
             />
-            <p className="text-bone-mute text-xs mt-2 font-mono">
-              ↳ stored in OS keychain, never in plain text
+            <p className="text-bone-mute text-xs mt-1.5 font-mono">
+              ↳ stored in OS keychain — never in plain text
             </p>
           </div>
         </Card>
