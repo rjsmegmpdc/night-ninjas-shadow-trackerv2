@@ -2,10 +2,10 @@
 
 ## Current state
 
-**Version**: 0.2.26  
+**Version**: 0.2.27  
 **Branch**: main (clean)  
 **Test coverage**: 33 test files · 609 tests · all passing  
-**Status**: Phase 26 complete. Patrol dashboard reordered (Tonight's Mission → Matrix → rest); compliance block replaced with sticky traffic-light bar; nav active state improved.
+**Status**: Phase 27 complete. Loading performance: parallel data fetching on patrol page, React cache() for settings reads, loading skeletons on all 14 routes.
 
 ---
 
@@ -598,6 +598,26 @@ Plus: `/setup` (7-step first-run wizard: Welcome → Strava → Connect → Sync
 - `WeekComplianceBlock` component preserved on disk; only the patrol page import was swapped
 
 **Test count**: 609 (no new tests — UI/layout changes only)  
+**Status**: Complete.
+
+---
+
+### Phase 27 — Loading Performance
+**What**: Eliminated sequential data-fetch waterfalls on the patrol page; added React `cache()` for settings reads; added instant loading skeletons on all 14 routes so screens feel snappy on first navigation.
+
+**Changes**:
+- `lib/store/settings.ts` — wrapped `get()` in React `cache()`. Per-request deduplication: multiple server components reading the same key in one render share one SQLite hit.
+- `app/(app)/patrol/page.tsx` — two waterfall fixes:
+  1. `getActivitiesInRange` now runs in parallel with `resolveWeekContext` via `Promise.all` (both only need date strings from the pure `currentWeekRange()` call).
+  2. `getTrailingChronicKm` and `getMidEntryDismissedPeriod` merged into the large 12-item `Promise.all` block, removing a second sequential pair.
+- 14 × `loading.tsx` — animated `animate-pulse` skeleton on every app route: calendar, club, coach-log, profile, strike, vo2max, journal, shoes, race, dojo, test-lab, help, recon, settings. Next.js streams these instantly while the async page component resolves.
+
+**Key files**:
+- `lib/store/settings.ts`
+- `app/(app)/patrol/page.tsx`
+- `app/(app)/[calendar|club|coach-log|profile|strike|vo2max|journal|shoes|race|dojo|test-lab|help|recon|settings]/loading.tsx` (14 new files)
+
+**Test count**: 609 (no new tests — infrastructure/perf changes only)  
 **Status**: Complete.
 
 ---
