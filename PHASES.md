@@ -2,10 +2,10 @@
 
 ## Current state
 
-**Version**: 0.2.25  
+**Version**: 0.2.26  
 **Branch**: main (clean)  
 **Test coverage**: 33 test files · 609 tests · all passing  
-**Status**: Phase 25 complete. 4-scheme color switcher (Ninja / Daybreak / Midnight / Light) available under Settings → Display.
+**Status**: Phase 26 complete. Patrol dashboard reordered (Tonight's Mission → Matrix → rest); compliance block replaced with sticky traffic-light bar; nav active state improved.
 
 ---
 
@@ -567,6 +567,37 @@ Plus: `/setup` (7-step first-run wizard: Welcome → Strava → Connect → Sync
 - `color-scheme: light/dark` set explicitly per theme block so browser chrome (scrollbars, form controls) matches the palette
 
 **Test count**: 609 (no new tests — all UI/theme changes)  
+**Status**: Complete.
+
+---
+
+### Phase 26 — Patrol Dashboard Reorder + Sticky Compliance Bar
+**What**: Reordered the Patrol dashboard for a cleaner daily-use flow and replaced the large compliance block with a slim sticky bar that collapses to traffic lights on scroll. Fixed nav active state to show a filled pill.
+
+**New dashboard order**:
+1. Compliance bar (sticky, under nav)
+2. Header strip (week title, sync, race countdown)
+3. Tonight's Mission
+4. Program Matrix
+5. Mid-program entry banner (conditional)
+6. Quick-log strip
+7. Framework stats
+8. Coaching detail (collapsed)
+
+**Key files**:
+- `components/patrol/compliance-bar.tsx` — **new** client component. Two states driven by `window.scrollY > 30`:
+  - *Expanded* (at top): single-line `78% · On Track` bar with coloured dot + count for each of Hit / Partial / Miss
+  - *Collapsed* (sticky): three traffic-light dots (green/amber/red) with counts; clicking a dot opens a popover explaining the status and a "→ session detail" link that opens the coaching drawer and scrolls to the session breakdown
+  - Uses `sticky top-16 z-40` + negative margin breakout (`-mx-4 sm:-mx-8 lg:-mx-12`) to span full width within the `max-w-7xl` container
+- `app/(app)/patrol/page.tsx` — Tonight's Mission moved before Program Matrix; Program Matrix moved to second position; `WeekComplianceBlock` replaced by `ComplianceBar` at top of dashboard; `id="coaching-detail"` added to `<details>`; `id="session-compliance"` added to session compliance card
+- `components/nav/topnav.tsx` — Active nav bucket now shows `bg-accent/10` filled pill + `shadow-[inset_0_1px_0_0_rgba(255,95,0,0.15)]` inner glow in addition to the existing accent underline; hover state adds `hover:bg-ink-panel`
+
+**Key decisions**:
+- Compliance bar uses scroll position (not IntersectionObserver) for simplicity and reliability across all browsers
+- Popover for the last (rightmost) traffic light uses `right-0` alignment to avoid off-screen overflow
+- `WeekComplianceBlock` component preserved on disk; only the patrol page import was swapped
+
+**Test count**: 609 (no new tests — UI/layout changes only)  
 **Status**: Complete.
 
 ---

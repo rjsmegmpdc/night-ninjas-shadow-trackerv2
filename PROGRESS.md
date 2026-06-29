@@ -1,7 +1,42 @@
 ## Branch
-main (clean — feat/theme-switcher merged)
+main (clean — feat/tonight-mission-top merged)
 
-## Session: 2026-06-28
+## Session: 2026-06-29
+
+### Completed
+
+**Phase 26 — Patrol Dashboard Reorder + Sticky Compliance Bar**
+
+- **`components/patrol/compliance-bar.tsx`** — new sticky client component replacing WeekComplianceBlock. Expanded state: slim bar with % + status + 3 coloured dots. Scrolled state (>30px): traffic-light dots only, sticks under nav, clicking opens explanation popover with link to session detail in coaching drawer.
+- **`app/(app)/patrol/page.tsx`** — Tonight's Mission moved to top (before header); Program Matrix moved directly under Tonight's Mission; ComplianceBar placed first (above header); WeekComplianceBlock removed; `id` attrs added to coaching-detail and session-compliance elements.
+- **`components/nav/topnav.tsx`** — Active nav bucket now shows filled `bg-accent/10` pill + inner glow (depressed state) on top of existing underline.
+
+### In progress
+- Nothing
+
+### Blocked
+- Nothing
+
+### Next session should
+- Manual smoke test: compliance bar scroll behaviour — expanded → traffic lights → popover → "session detail" link
+- Manual smoke test: quick-log strip, mid-entry banner, setup wizard full flow
+- Loading performance: static shell caching / prefetch improvements (deferred from this session)
+
+## Key decisions made (Phase 26)
+- Scroll position listener (`window.scrollY > 30`) used over IntersectionObserver — simpler, more predictable cross-browser
+- WeekComplianceBlock component kept on disk; only patrol page import swapped (safe, no breaking change)
+- Rightmost popover (miss) aligns `right-0` to prevent off-screen overflow
+
+## Files changed this session
+- components/patrol/compliance-bar.tsx (new)
+- app/(app)/patrol/page.tsx (reorder + compliance swap)
+- components/nav/topnav.tsx (active state)
+- PHASES.md (Phase 26 entry, version 0.2.26)
+- PROGRESS.md (this file)
+
+---
+
+## Previous session (2026-06-29, feat/theme-switcher → main)
 
 ### Completed
 
